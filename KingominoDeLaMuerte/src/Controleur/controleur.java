@@ -26,6 +26,8 @@ public class controleur {
     private void main(){
         System.out.println(generatePiecePioche());
         System.out.println(generatorPieces().getPieces());
+        System.out.println(generatorPieces().getPieces());
+        System.out.println(generatorPieces().getPieces());
         System.out.println(listePiece);
     }
     
@@ -58,44 +60,37 @@ public class controleur {
         for(String i : listePiece.keySet())
             for(int j=1; j<=listePiece.get(i);j++)
                 pioche.add(i);
-        while(!pGauche){
+        while(!pDroite){
             int sum = pioche.size();
             int random = new Random().nextInt(sum+1)+1;
-            int random2 = new Random().nextInt(sum+1)+1;
-            if(pDroite){
-                System.out.println("test1.5");
-                System.out.println(pioche.get(random2));
-                newPieces = update(pioche.get(random2),pDroite);
-                pioche.remove(random2);
-                pGauche = true;
-            }
-            while(!pDroite){
-                System.out.println("test0");
-                newPieces = update(pioche.get(random),pDroite);
+            if(pGauche){
+                newPieces = update(pioche.get(random),pGauche,newPieces);
                 pioche.remove(random);
                 pDroite = true;
+            }
+            while(!pGauche){
+                newPieces = update(pioche.get(random),pGauche,newPieces);
+                pioche.remove(random);
+                pGauche = true;
             }
         }
         return newPieces;
     }
     
-    private Pieces update(String type, boolean pDroite){
-        Pieces newPieces = new Pieces(new HashMap<String,Integer>(),new HashMap<String,Integer>());
-        HashMap infoPieces = new HashMap<String,Integer>();
+    private Pieces update(String type, boolean pGauche, Pieces piecesToUpdate){
+        HashMap <String,Integer> infoPieces = new HashMap<String,Integer>();
         int nombre = Integer.parseInt(type.substring(type.indexOf(' ')+1));
-        infoPieces.put(type,nombre);
-        if(!pDroite){
-            System.out.println("test1");
-            newPieces.setPdroite(infoPieces);
+        infoPieces.put(type.substring(0,type.indexOf(' ')),nombre);
+        if(!pGauche){
+            piecesToUpdate.setPgauche(infoPieces);
         }
         else{
-            System.out.println("test2");
-            newPieces.setPgauche(infoPieces);           
+            piecesToUpdate.setPdroite(infoPieces);   
         }
         for (String j : listePiece.keySet()){
             if(j==type)
                 listePiece.put(j,listePiece.get(j)-1);
         }
-        return newPieces;
+        return piecesToUpdate;
     }
 }

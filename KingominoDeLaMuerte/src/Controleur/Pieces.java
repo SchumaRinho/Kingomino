@@ -62,8 +62,8 @@ public class Pieces {
     
     public ArrayList<HashMap<String,Integer>> getPieces(){
         ArrayList<HashMap<String,Integer>> piece = new ArrayList<HashMap<String,Integer>>();
-        piece.add(getPdroite());
         piece.add(getPgauche());
+        piece.add(getPdroite());
         return piece;
 
     }
