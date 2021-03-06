@@ -5,11 +5,10 @@
  */
 package Controleur;
 
+import model.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.Scanner;
 
 /**
  *
@@ -17,9 +16,9 @@ import java.util.Scanner;
  */
 public class controleur {
      HashMap<String,Integer> listePiece= new HashMap<String,Integer>();
+     plateau plateau = new plateau();
     
     public controleur (){
-        this.listePiece = listePiece;
         main();
     }
     
@@ -29,6 +28,7 @@ public class controleur {
         System.out.println(generatorPieces().getPieces());
         System.out.println(generatorPieces().getPieces());
         System.out.println(listePiece);
+        System.out.println(plateau);
     }
     
     private HashMap<String,Integer> generatePiecePioche(){
@@ -62,7 +62,7 @@ public class controleur {
                 pioche.add(i);
         while(!pDroite){
             int sum = pioche.size();
-            int random = new Random().nextInt(sum+1)+1;
+            int random = new Random().nextInt(sum);
             if(pGauche){
                 newPieces = update(pioche.get(random),pGauche,newPieces);
                 pioche.remove(random);
