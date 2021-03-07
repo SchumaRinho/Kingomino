@@ -40,11 +40,11 @@ public class Controleur {
             listePiece.put("plaine 2", 2);
             listePiece.put("mer 0", 12);
             listePiece.put("mer 1", 6);
-            listePiece.put("roche 0", 6);
-            listePiece.put("roche 1", 2);
-            listePiece.put("roche 2", 2);
-            listePiece.put("foret 0", 16);
-            listePiece.put("foret 1", 6);
+            listePiece.put("marécage 0", 6);
+            listePiece.put("marécage 1", 2);
+            listePiece.put("marécage 2", 2);
+            listePiece.put("forêt 0", 16);
+            listePiece.put("forêt 1", 6);
             listePiece.put("mine 0", 1);
             listePiece.put("mine 1", 1);
             listePiece.put("mine 2", 3);
