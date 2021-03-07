@@ -14,11 +14,11 @@ import java.util.Random;
  *
  * @author leovi
  */
-public class controleur {
+public class Controleur {
      HashMap<String,Integer> listePiece= new HashMap<String,Integer>();
-     plateau plateau = new plateau();
+     Plateau plateau = new Plateau();
     
-    public controleur (){
+    public Controleur (){
         main();
     }
     
@@ -53,10 +53,10 @@ public class controleur {
         return listePiece;
     }
     private Pieces generatorPieces(){
-        Pieces newPieces = new Pieces(new HashMap<String,Integer>(),new HashMap<String,Integer>());
+        Pieces newPieces = new Pieces(new HashMap<>(),new HashMap<>());
         boolean pGauche = false;
         boolean pDroite = false;
-        ArrayList<String> pioche = new ArrayList<String>();
+        ArrayList<String> pioche = new ArrayList<>();
         for(String i : listePiece.keySet())
             for(int j=1; j<=listePiece.get(i);j++)
                 pioche.add(i);
@@ -78,7 +78,7 @@ public class controleur {
     }
     
     private Pieces update(String type, boolean pGauche, Pieces piecesToUpdate){
-        HashMap <String,Integer> infoPieces = new HashMap<String,Integer>();
+        HashMap <String,Integer> infoPieces = new HashMap<>();
         int nombre = Integer.parseInt(type.substring(type.indexOf(' ')+1));
         infoPieces.put(type.substring(0,type.indexOf(' ')),nombre);
         if(!pGauche){

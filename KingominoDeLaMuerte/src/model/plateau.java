@@ -12,7 +12,7 @@ import java.util.Arrays;
  *
  * @author leovi
  */
-public class plateau {
+public class Plateau {
     
     /*private void construcPlateau(int x, int y){
         for(int i = 0; i <= x-1 ; i++){

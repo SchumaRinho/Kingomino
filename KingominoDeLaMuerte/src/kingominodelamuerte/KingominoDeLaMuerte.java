@@ -16,6 +16,6 @@ public class KingominoDeLaMuerte {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        controleur lol = new controleur();
+        Controleur lol = new Controleur();
     }   
 }

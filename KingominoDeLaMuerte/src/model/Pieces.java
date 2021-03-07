@@ -14,8 +14,8 @@ import java.util.HashMap;
  */
 public class Pieces {
 
-    HashMap <String, Integer> Pdroite = new HashMap <String, Integer>();
-    HashMap <String, Integer> Pgauche = new HashMap <String, Integer>();
+    HashMap <String, Integer> Pdroite = new HashMap <>();
+    HashMap <String, Integer> Pgauche = new HashMap <>();
     
     public Pieces(HashMap <String, Integer> Pgauche, HashMap <String, Integer> Pdroite){
         Pgauche = this.Pgauche;
@@ -61,7 +61,7 @@ public class Pieces {
     }
     
     public ArrayList<HashMap<String,Integer>> getPieces(){
-        ArrayList<HashMap<String,Integer>> piece = new ArrayList<HashMap<String,Integer>>();
+        ArrayList<HashMap<String,Integer>> piece = new ArrayList<HashMap<>>();
         piece.add(getPgauche());
         piece.add(getPdroite());
         return piece;
