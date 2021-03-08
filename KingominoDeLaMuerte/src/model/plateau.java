@@ -99,8 +99,6 @@ public class Plateau {
         b.put("forêt",1);
         Pieces p = new Pieces(a,b);
         
-        System.out.println(p.getPieces());
-        
         addTile(p,6,7,7,7);
     }
     
@@ -192,3 +190,4 @@ public class Plateau {
 
     
 }
+//voilà, la visite est terminé ☺
