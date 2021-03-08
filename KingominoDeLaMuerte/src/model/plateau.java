@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 public class Plateau {
     
-    private ArrayList<HashMap<String,Integer>> plateau = new ArrayList<HashMap<String,Integer>>();
     public static final String ANSI_RESET = "\u001B[0m";
     
     public static final String ANSI_BLACK = "\u001B[30m";
@@ -36,6 +35,8 @@ public class Plateau {
     public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
     public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
+    
+    private ArrayList<HashMap<String,Integer>> plateau = new ArrayList<HashMap<String,Integer>>();
     
     public Plateau(){
         ArrayList tmp = null;
@@ -95,14 +96,17 @@ public class Plateau {
         HashMap b = new HashMap<String, Integer>();
         
         a.put("mine",3);
-        a.put("forêt",1);
+        b.put("forêt",1);
         Pieces p = new Pieces(a,b);
+        
+        System.out.println(p.getPieces());
         
         addTile(p,6,7,7,7);
     }
     
     public void addTile(Pieces p, Integer xa, Integer ya, Integer xb, Integer yb){
-        //AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH
+        this.plateau.set(xa*9+ya, p.getPieces().get(0));
+        this.plateau.set(xb*9+yb, p.getPieces().get(1));
     }
         
     private String getKey(Integer coo){

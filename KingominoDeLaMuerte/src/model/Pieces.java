@@ -18,23 +18,12 @@ public class Pieces {
     HashMap <String, Integer> Pgauche = new HashMap <>();
     
     public Pieces(HashMap <String, Integer> Pgauche, HashMap <String, Integer> Pdroite){
-        Pgauche = this.Pgauche;
-        Pdroite = this.Pdroite;
+        this.Pgauche = Pgauche;
+        this.Pdroite = Pdroite;
     }
     
     public HashMap<String, Integer> getPdroite() {
-        HashMap contenuPiece = new HashMap<String, Integer>();
-        int tmpval = 0;
-        String tmptype = "";
-        for(Integer i : this.Pdroite.values()){
-            tmpval = i;
-        }
-        Integer.toString(tmpval);
-        for(String j : this.Pdroite.keySet()){
-            tmptype = j;
-        }
-        contenuPiece.put(tmptype,tmpval);
-        return contenuPiece;
+        return this.Pdroite;
     }
 
     public void setPdroite(HashMap <String,Integer> Pdroite) {
@@ -42,18 +31,7 @@ public class Pieces {
     }
 
     public HashMap<String, Integer> getPgauche() {
-        HashMap contenuPiece = new HashMap<String, Integer>();
-        int tmpval = 0;
-        String tmptype = "";
-        for(Integer i : this.Pgauche.values()){
-            tmpval = i;
-        }
-        Integer.toString(tmpval);
-        for(String j : this.Pgauche.keySet()){
-            tmptype = j;
-        }
-        contenuPiece.put(tmptype,tmpval);
-        return contenuPiece;
+        return this.Pgauche;
     }
 
     public void setPgauche(HashMap <String,Integer> Pgauche) {
@@ -65,6 +43,5 @@ public class Pieces {
         piece.add(getPgauche());
         piece.add(getPdroite());
         return piece;
-
     }
 }
