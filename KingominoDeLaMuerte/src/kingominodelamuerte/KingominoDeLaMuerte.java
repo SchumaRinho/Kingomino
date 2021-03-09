@@ -6,6 +6,8 @@
 package kingominodelamuerte;
 
 import Controleur.*;
+import model.*;
+import Vue.*;
 /**
  *
  * @author leovi
@@ -16,6 +18,8 @@ public class KingominoDeLaMuerte {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Controleur lol = new Controleur();
+        Plateau model = new Plateau();
+        Vue vue = new Vue(model);
+        Controleur lol = new Controleur(model,vue);
     }   
 }

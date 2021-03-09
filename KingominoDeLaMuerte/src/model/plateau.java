@@ -46,8 +46,8 @@ public class Plateau {
         HashMap chateau = new HashMap<String,Integer>();
         chateau.put("chateau",0);
         this.plateau.set(4*9+4,chateau);
-        plateauTest();
-        test();
+        /*plateauTest();
+        test();*/
     }
     
     public void plateauTest(){
@@ -107,86 +107,18 @@ public class Plateau {
         this.plateau.set(xb*9+yb, p.getPieces().get(1));
     }
         
-    private String getKey(Integer coo){
+    public String getKey(Integer coo){
         return plateau.get(coo).keySet().toArray()[0].toString();
     }
     
     
-    private Integer getCrown(Integer coo, String key){
+    public Integer getCrown(Integer coo, String key){
         return this.plateau.get(coo).get(key);
     }
     
-    @Override
-	public String toString(){
-            String tmp = "";
-            for(int i = 0; i<9; i++){
-                tmp+= ANSI_WHITE+ "|"+ANSI_RESET;
-		for(int j = 0; j<9; j++){
-                    if(plateau.get(i*9+j) == null){
-                        tmp+="   ";
-                    }else{
-                        String key = getKey(i*9+j);
-                        if(key=="chateau"){
-                            tmp+=ANSI_WHITE_BACKGROUND + " C " + ANSI_RESET;
-                        }else if(key=="marécage"){
-                            tmp+=ANSI_CYAN_BACKGROUND;
-                            if(getCrown(i*9+j, key) == 0 ){
-                                tmp+="   ";
-                            }else{
-                                tmp+=" "+getCrown(i*9+j, key)+" ";
-                            }
-                            tmp+=ANSI_RESET;
-                        }else if(key=="mer"){
-                            tmp+=ANSI_BLUE_BACKGROUND;
-                            if(getCrown(i*9+j, key) == 0 ){
-                                tmp+="   ";
-                            }else{
-                                tmp+=ANSI_WHITE + " "+getCrown(i*9+j, key)+" ";
-                            }
-                            tmp+=ANSI_RESET;
-                        }else if(key=="plaine"){
-                            tmp+=ANSI_GREEN_BACKGROUND;
-                            if(getCrown(i*9+j, key) == 0 ){
-                                tmp+="   ";
-                            }else{
-                                tmp+=" "+getCrown(i*9+j, key)+" ";
-                            }
-                            tmp+=ANSI_RESET;
-                        }else if(key=="champs"){
-                            tmp+=ANSI_YELLOW_BACKGROUND;
-                            if(getCrown(i*9+j, key) == 0 ){
-                                tmp+="   ";
-                            }else{
-                                tmp+=" "+getCrown(i*9+j, key)+" ";
-                            }
-                            tmp+=ANSI_RESET;
-                        }else if(key=="forêt"){
-                            tmp+=ANSI_PURPLE_BACKGROUND;
-                            if(getCrown(i*9+j, key) == 0 ){
-                                tmp+="   ";
-                            }else{
-                                tmp+=ANSI_WHITE + " "+getCrown(i*9+j, key)+" ";
-                            }
-                            tmp+=ANSI_RESET;
-                        }else if(key=="mine"){
-                            tmp+=ANSI_RED_BACKGROUND;
-                            if(getCrown(i*9+j, key) == 0 ){
-                                tmp+="   ";
-                            }else{
-                                tmp+=ANSI_WHITE + " "+getCrown(i*9+j, key)+" ";
-                            }
-                            tmp+=ANSI_RESET;
-                        }else{
-                            tmp+=ANSI_BLACK_BACKGROUND+" "+getCrown(i*9+j, key)+" "+ANSI_RESET;
-                        }
-                    }
-                    tmp+=ANSI_WHITE+"|"+ANSI_RESET;
-                }
-                tmp+="\n\n";
-            }
-            return tmp;
-             
-	}
+    public ArrayList<HashMap<String,Integer>> getPlateau(){
+        return this.plateau;
+    }
 
     
 }

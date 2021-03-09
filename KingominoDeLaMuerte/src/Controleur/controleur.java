@@ -6,9 +6,11 @@
 package Controleur;
 
 import model.*;
+import Vue.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  *
@@ -17,18 +19,17 @@ import java.util.Random;
 public class Controleur {
      HashMap<String,Integer> listePiece= new HashMap<String,Integer>();
      Plateau plateau = new Plateau();
+     Vue vue = new Vue(plateau);
     
-    public Controleur (){
+    public Controleur (Plateau plateau, Vue vue){
+        this.plateau = plateau;
+        this.vue = vue;
+        generatePiecePioche();
         main();
     }
     
     private void main(){
-        System.out.println(generatePiecePioche());
-        System.out.println(generatorPieces().getPieces());
-        System.out.println(generatorPieces().getPieces());
-        System.out.println(generatorPieces().getPieces());
-        System.out.println(listePiece);
-        System.out.println(plateau);
+        vue.affichage(this);
     }
     
     private HashMap<String,Integer> generatePiecePioche(){
@@ -52,7 +53,7 @@ public class Controleur {
         }
         return listePiece;
     }
-    private Pieces generatorPieces(){
+    public Pieces generatorPieces(){
         Pieces newPieces = new Pieces(new HashMap<>(),new HashMap<>());
         boolean pGauche = false;
         boolean pDroite = false;
@@ -92,5 +93,26 @@ public class Controleur {
                 listePiece.put(j,listePiece.get(j)-1);
         }
         return piecesToUpdate;
+    }
+    
+        public int choixValide(int borneInf, int borneSup, String texte){
+		int choix = -1;
+		while(choix == -1){
+			Scanner choixScan = new Scanner(System.in);
+			try{
+				choix = choixScan.nextInt();
+				while(choix < borneInf || choix > borneSup){
+					System.out.println(texte);
+					choix = choixScan.nextInt();
+				}
+			}
+			catch(Exception e){
+				System.out.println("Choix invalide");
+			}
+		}
+		return choix;
+    }
+    public HashMap<String,Integer> getListePiece(){
+        return this.listePiece;
     }
 }

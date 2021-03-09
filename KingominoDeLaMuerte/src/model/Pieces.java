@@ -14,8 +14,8 @@ import java.util.HashMap;
  */
 public class Pieces {
 
-    HashMap <String, Integer> Pdroite = new HashMap <>();
-    HashMap <String, Integer> Pgauche = new HashMap <>();
+    HashMap <String, Integer> Pdroite = new HashMap <String, Integer>();
+    HashMap <String, Integer> Pgauche = new HashMap <String, Integer>();
     
     public Pieces(HashMap <String, Integer> Pgauche, HashMap <String, Integer> Pdroite){
         this.Pgauche = Pgauche;
