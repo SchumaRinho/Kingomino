@@ -16,28 +16,22 @@ public class Pieces {
 
     HashMap <String, Integer> Pdroite = new HashMap <String, Integer>();
     HashMap <String, Integer> Pgauche = new HashMap <String, Integer>();
+    int valeurPiece;
     
-    public Pieces(HashMap <String, Integer> Pgauche, HashMap <String, Integer> Pdroite){
+    public Pieces(HashMap <String, Integer> Pgauche, HashMap <String, Integer> Pdroite, int valeur){
         this.Pgauche = Pgauche;
         this.Pdroite = Pdroite;
+            this.valeurPiece = valeur;
     }
     
     public HashMap<String, Integer> getPdroite() {
         return this.Pdroite;
     }
 
-    public void setPdroite(HashMap <String,Integer> Pdroite) {
-        this.Pdroite = Pdroite;
-    }
-
     public HashMap<String, Integer> getPgauche() {
         return this.Pgauche;
     }
-
-    public void setPgauche(HashMap <String,Integer> Pgauche) {
-        this.Pgauche = Pgauche;
-    }
-    
+  
     public ArrayList<HashMap<String,Integer>> getPieces(){
         ArrayList<HashMap<String,Integer>> piece = new ArrayList<>();
         piece.add(getPgauche());

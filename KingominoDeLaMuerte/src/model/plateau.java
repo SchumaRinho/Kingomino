@@ -96,8 +96,8 @@ public class Plateau {
         HashMap b = new HashMap<String, Integer>();
         
         a.put("mine",3);
-        b.put("forêt",1);
-        Pieces p = new Pieces(a,b);
+        b.put("champs",0);
+        Pieces p = new Pieces(a,b,48);
         
         addTile(p,6,7,7,7);
     }

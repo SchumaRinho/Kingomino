@@ -17,7 +17,7 @@ import java.util.Scanner;
  * @author leovi
  */
 public class Controleur {
-     HashMap<String,Integer> listePiece= new HashMap<String,Integer>();
+     ArrayList<Pieces> pioche= new ArrayList<Pieces>();
      Plateau plateau = new Plateau();
      Vue vue = new Vue(plateau);
     
@@ -32,52 +32,86 @@ public class Controleur {
         vue.affichage(this);
     }
     
-    private HashMap<String,Integer> generatePiecePioche(){
-        for(int i=1; i<=96; i++){
-            listePiece.put("champs 0", 21);
-            listePiece.put("champs 1", 5);
-            listePiece.put("plaine 0", 10);
-            listePiece.put("plaine 1", 2);
-            listePiece.put("plaine 2", 2);
-            listePiece.put("mer 0", 12);
-            listePiece.put("mer 1", 6);
-            listePiece.put("marécage 0", 6);
-            listePiece.put("marécage 1", 2);
-            listePiece.put("marécage 2", 2);
-            listePiece.put("forêt 0", 16);
-            listePiece.put("forêt 1", 6);
-            listePiece.put("mine 0", 1);
-            listePiece.put("mine 1", 1);
-            listePiece.put("mine 2", 3);
-            listePiece.put("mine 3", 1);
-        }
-        return listePiece;
-    }
-    public Pieces generatorPieces(){
-        Pieces newPieces = new Pieces(new HashMap<>(),new HashMap<>());
-        boolean pGauche = false;
-        boolean pDroite = false;
-        ArrayList<String> pioche = new ArrayList<>();
-        for(String i : listePiece.keySet())
-            for(int j=1; j<=listePiece.get(i);j++)
-                pioche.add(i);
-        while(!pDroite){
-            int sum = pioche.size();
-            int random = new Random().nextInt(sum);
-            if(pGauche){
-                newPieces = update(pioche.get(random),pGauche,newPieces);
-                pioche.remove(random);
-                pDroite = true;
+    private ArrayList<Pieces> generatePiecePioche(){
+        int numPieces=1;
+        while(numPieces<49){
+            if(numPieces<=2){
+                pioche.add(generatorPiece("champs 0","champs 0",numPieces));
             }
-            while(!pGauche){
-                newPieces = update(pioche.get(random),pGauche,newPieces);
-                pioche.remove(random);
-                pGauche = true;
+            else if(numPieces<=6)
+                pioche.add(generatorPiece("forêt 0","forêt 0",numPieces));                
+            else if(numPieces<=9)
+                pioche.add(generatorPiece("mer 0","mer 0",numPieces));                
+            else if(numPieces<=11)
+                pioche.add(generatorPiece("plaine 0","plaine 0",numPieces));
+            else if(numPieces<=12)
+                pioche.add(generatorPiece("marécage 0","marécage 0",numPieces));
+            else if(numPieces<=13){
+                pioche.add(generatorPiece("champs 0","forêt 0",numPieces));
+                pioche.add(generatorPiece("champs 0","mer 0",numPieces++));
+                pioche.add(generatorPiece("champs 0","plaine 0",numPieces++));
+                pioche.add(generatorPiece("champs 0","marécage 0",numPieces++));
+                pioche.add(generatorPiece("forêt 0","mer 0",numPieces++));
+                pioche.add(generatorPiece("forêt 0","plaine 0",numPieces++));
+                pioche.add(generatorPiece("champs 1","forêt 0",numPieces++));
+                pioche.add(generatorPiece("champs 1","mer 0",numPieces++));
+                pioche.add(generatorPiece("champs 1","plaine 0",numPieces++));
+                pioche.add(generatorPiece("champs 1","marécage 0",numPieces++));
+                pioche.add(generatorPiece("champs 1","mine 0",numPieces++));
             }
+            else if(numPieces<=27)
+                pioche.add(generatorPiece("forêt 1","champs 0",numPieces));
+            else if(numPieces<=31){
+                pioche.add(generatorPiece("forêt 1","mer 0",numPieces));
+                pioche.add(generatorPiece("forêt 1","plaine 0",numPieces++));
+                pioche.add(generatorPiece("mer 1","champs 0",numPieces++));
+                pioche.add(generatorPiece("mer 1","champs 0",numPieces++));
+            }
+            else if(numPieces<=35)
+                pioche.add(generatorPiece("mer 1","forêt 0",numPieces));
+            else if(numPieces<=48){
+                pioche.add(generatorPiece("forêt 1","mer 0",numPieces));
+                pioche.add(generatorPiece("champs 0","plaine 1",numPieces++));
+                pioche.add(generatorPiece("plaine 1","marécage 1",numPieces++));
+                pioche.add(generatorPiece("mine 1","champs 0",numPieces++));
+                pioche.add(generatorPiece("champs 0","marécage 2",numPieces++));
+                pioche.add(generatorPiece("mer 0","plaine 1",numPieces++));
+                pioche.add(generatorPiece("champs 0","marécage 1",numPieces++));
+                pioche.add(generatorPiece("champs 0","plaine 2",numPieces++));
+                pioche.add(generatorPiece("mer 0","plaine 2",numPieces++));
+                pioche.add(generatorPiece("plaine 0","marécage 2",numPieces++));
+                pioche.add(generatorPiece("mine 2","champs 0",numPieces++));
+                pioche.add(generatorPiece("marécage 0","mine 2",numPieces++));
+                pioche.add(generatorPiece("marécage 0","mine 2",numPieces++));
+                pioche.add(generatorPiece("champs 0","mine 3",numPieces++));
+            }
+            numPieces++;
         }
-        return newPieces;
+        return pioche;
     }
     
+    private Pieces generatorPiece(String typeG, String typeD, int val){
+        HashMap<String,Integer> pGauche = new HashMap<String,Integer>();
+        pGauche.put(typeG.substring(0,typeG.indexOf(' ')), Integer.parseInt(typeG.substring(typeG.indexOf(' ')+1))); //typeG = "champs 0"
+        HashMap<String,Integer> pDroite = new HashMap<String,Integer>();
+        pDroite.put(typeD.substring(0,typeD.indexOf(' ')), Integer.parseInt(typeG.substring(typeG.indexOf(' ')+1)));
+        return new Pieces(pGauche,pDroite,0);
+    }
+    public ArrayList<Pieces> getPieceFromPioche(){
+        ArrayList<Pieces> tirage = new ArrayList<Pieces>();
+        int i=0;
+        while(i<4){
+            int sum = pioche.size();
+            System.out.println(sum);
+            int random = new Random().nextInt(sum);
+            System.out.println(random);
+            tirage.add(pioche.get(random));
+            pioche.remove(random);
+            i++;
+        }
+        return tirage;
+    }
+    /*
     private Pieces update(String type, boolean pGauche, Pieces piecesToUpdate){
         HashMap <String,Integer> infoPieces = new HashMap<>();
         int nombre = Integer.parseInt(type.substring(type.indexOf(' ')+1));
@@ -88,13 +122,13 @@ public class Controleur {
         else{
             piecesToUpdate.setPdroite(infoPieces);   
         }
-        for (String j : listePiece.keySet()){
+        for (String j : pioche.keySet()){
             if(j==type)
-                listePiece.put(j,listePiece.get(j)-1);
+                pioche.put(j,pioche.get(j)-1);
         }
         return piecesToUpdate;
     }
-    
+    */
         public int choixValide(int borneInf, int borneSup, String texte){
 		int choix = -1;
 		while(choix == -1){
@@ -112,7 +146,7 @@ public class Controleur {
 		}
 		return choix;
     }
-    public HashMap<String,Integer> getListePiece(){
-        return this.listePiece;
+    public ArrayList<Pieces> getPioche(){
+        return this.pioche;
     }
 }

@@ -39,10 +39,8 @@ public class Vue {
         this.controleur = controleur;
         System.out.println("Si vous voulez faire un choix , tapez 1");
         if(controleur.choixValide(1,1,"Tapez 1 c'est un ordre !")==1){
-            System.out.println(controleur.generatorPieces().getPieces());
-            System.out.println(controleur.generatorPieces().getPieces());
-            System.out.println(controleur.generatorPieces().getPieces());
-            System.out.println(controleur.getListePiece());
+            System.out.println(controleur.getPieceFromPioche());
+            System.out.println(controleur.getPioche());
             plateau.plateauTest();
             affichePlateau();
         }   
