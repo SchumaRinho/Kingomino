@@ -20,6 +20,7 @@ public class KingominoDeLaMuerte {
     public static void main(String[] args) {
         Plateau plateau1 = new Plateau();
         Plateau plateau2 = new Plateau();
+        //plateau2.plateauTest();
         Vue vue = new Vue(plateau1,plateau2);
         Controleur lol = new Controleur(plateau1,plateau2,vue);
     }   

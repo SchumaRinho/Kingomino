@@ -31,7 +31,6 @@ public class Vue {
     public Vue (Plateau plateau1,Plateau plateau2){
         this.plateau1 = plateau1;
         this.plateau2 = plateau2;
-        this.plateau1.plateauTest();
     }
     
     public void setPlateau(Plateau plateau1,Plateau plateau2){
@@ -65,8 +64,8 @@ public class Vue {
         System.out.println(color.get(kd)+ANSI_WHITE+" "+pd.get(kd)+" "+ANSI_RESET);
     }
 
-    public void choixPiece(int joueur){
-        System.out.println("Le joueur "+joueur+" doit choisir un domino [ entrez un nombre entre 1 et 4 ]");
+    public void choixPiece(int joueur, int n){
+        System.out.println("Le joueur "+joueur+" doit choisir un domino [ entrez un nombre entre 1 et "+n+" ]");
     }
 
     public void affichePlateau(Plateau plateau){
