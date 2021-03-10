@@ -14,14 +14,14 @@ import java.util.HashMap;
  */
 public class Pieces {
 
-    HashMap <String, Integer> Pdroite = new HashMap <String, Integer>();
-    HashMap <String, Integer> Pgauche = new HashMap <String, Integer>();
-    int valeurPiece;
+    private HashMap <String, Integer> Pdroite;
+    private HashMap <String, Integer> Pgauche;
+    private int valeurPiece;
     
     public Pieces(HashMap <String, Integer> Pgauche, HashMap <String, Integer> Pdroite, int valeur){
         this.Pgauche = Pgauche;
         this.Pdroite = Pdroite;
-            this.valeurPiece = valeur;
+        this.valeurPiece = valeur;
     }
     
     public HashMap<String, Integer> getPdroite() {
@@ -30,6 +30,10 @@ public class Pieces {
 
     public HashMap<String, Integer> getPgauche() {
         return this.Pgauche;
+    }
+
+    public int getValeur(){
+        return this.valeurPiece;
     }
   
     public ArrayList<HashMap<String,Integer>> getPieces(){
