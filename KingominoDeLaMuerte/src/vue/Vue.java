@@ -3,12 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Vue;
+package vue;
 
+import controleur.Controleur;
 import model.*;
-import Controleur.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import static model.Plateau.color;
 /**
  *
@@ -45,23 +44,16 @@ public class Vue {
         affichePlateau(this.plateau2);
     }
 
-    public void affichePioche(ArrayList<Pieces> pioche){
-        for(Pieces p : pioche){
+    public void affichePioche(ArrayList<Domino> pioche){
+        for(Domino p : pioche){
             affichePiece(p);
             System.out.println("");
         }
     }
 
-    public void affichePiece(Pieces p){
-        HashMap pg, pd;
-        String kg, kd;
-        pg = p.getPgauche();
-        pd = p.getPdroite();
-        kg = pg.keySet().toArray()[0].toString();
-        kd = pd.keySet().toArray()[0].toString();
-
-        System.out.print(color.get(kg)+ANSI_WHITE+" "+pg.get(kg)+" "+ANSI_RESET+"|");
-        System.out.println(color.get(kd)+ANSI_WHITE+" "+pd.get(kd)+" "+ANSI_RESET);
+    public void affichePiece(Domino domino){
+        System.out.print(color.get(domino.getPgauche().getType())+ANSI_WHITE+" "+domino.getPgauche().getCrown()+" "+ANSI_RESET+"|");
+        System.out.println(color.get(domino.getPdroite().getType())+ANSI_WHITE+" "+domino.getPdroite().getCrown()+" "+ANSI_RESET);
     }
 
     public void choixPiece(int joueur, int n){
@@ -76,7 +68,7 @@ public class Vue {
                 if(plateau.getPlateau().get(i*9+j) == null){
                     tmp+="   ";
                 }else{
-                    String key = plateau.getKey(i*9+j);
+                    String key = plateau.getType(i*9+j);
                     if(key=="chateau"){
                         tmp+=ANSI_WHITE_BACKGROUND + " C " + ANSI_RESET;
                     }else{

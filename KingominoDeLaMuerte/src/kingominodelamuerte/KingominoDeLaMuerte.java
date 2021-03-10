@@ -5,9 +5,9 @@
  */
 package kingominodelamuerte;
 
-import Controleur.*;
+import vue.Vue;
+import controleur.Controleur;
 import model.*;
-import Vue.*;
 /**
  *
  * @author leovi
