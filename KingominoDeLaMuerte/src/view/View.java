@@ -3,17 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package vue;
+package view;
 
-import controleur.Controleur;
+import controller.Controller;
 import model.*;
 import java.util.ArrayList;
-import static model.Plateau.color;
+import static model.Board.color;
 /**
  *
  * @author Clémentine
  */
-public class Vue {
+public class View {
 
     public static final String ANSI_RESET = "\u001B[0m";
     
@@ -24,15 +24,15 @@ public class Vue {
     public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
-    private Plateau plateau1, plateau2;
-    private Controleur controleur;
+    private Board plateau1, plateau2;
+    private Controller controleur;
     
-    public Vue (Plateau plateau1,Plateau plateau2){
+    public View (Board plateau1,Board plateau2){
         this.plateau1 = plateau1;
         this.plateau2 = plateau2;
     }
     
-    public void setPlateau(Plateau plateau1,Plateau plateau2){
+    public void setPlateau(Board plateau1,Board plateau2){
         this.plateau1 = plateau1;
         this.plateau2 = plateau2;
     }
@@ -60,23 +60,23 @@ public class Vue {
         System.out.println("Le joueur "+joueur+" doit choisir un domino [ entrez un nombre entre 1 et "+n+" ]");
     }
 
-    public void affichePlateau(Plateau plateau){
+    public void affichePlateau(Board plateau){
         String tmp = "";
         for(int i = 0; i<9; i++){
             tmp+= ANSI_WHITE+ "|"+ANSI_RESET;
             for(int j = 0; j<9; j++){
-                if(plateau.getPlateau().get(i*9+j) == null){
+                if(plateau.getTile(i,j) == null){
                     tmp+="   ";
                 }else{
-                    String key = plateau.getType(i*9+j);
+                    String key = plateau.getFieldType(i,j);
                     if(key=="chateau"){
                         tmp+=ANSI_WHITE_BACKGROUND + " C " + ANSI_RESET;
                     }else{
                         tmp+=color.get(key);
-                        if(plateau.getCrown(i*9+j, key) == 0 ){
+                        if(plateau.getCrown(i,j) == 0 ){
                             tmp+="   ";
                         }else{
-                            tmp+=" "+ANSI_WHITE+plateau.getCrown(i*9+j, key)+" ";
+                            tmp+=" "+ANSI_WHITE+plateau.getCrown(i,j)+" ";
                         }
                         tmp+=ANSI_RESET;
                     }

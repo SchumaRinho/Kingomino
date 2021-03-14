@@ -5,8 +5,8 @@
  */
 package kingominodelamuerte;
 
-import vue.Vue;
-import controleur.Controleur;
+import view.View;
+import controller.Controller;
 import model.*;
 /**
  *
@@ -18,10 +18,10 @@ public class KingominoDeLaMuerte {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Plateau plateau1 = new Plateau();
-        Plateau plateau2 = new Plateau();
+        Board plateau1 = new Board();
+        Board plateau2 = new Board();
         //plateau2.plateauTest();
-        Vue vue = new Vue(plateau1,plateau2);
-        Controleur lol = new Controleur(plateau1,plateau2,vue);
+        View vue = new View(plateau1,plateau2);
+        Controller lol = new Controller(plateau1,plateau2,vue);
     }   
 }

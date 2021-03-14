@@ -5,17 +5,15 @@
  */
 package model;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.*;
 
 
-public class Plateau {
+public class Board {
     
     private ArrayList<Tile> plateau = new ArrayList<Tile>();
     public static HashMap<String,String> color;
 
-    public Plateau(){
+    public Board(){
         ArrayList tmp = null;
         for(int i = 0; i<81; i++){
             plateau.add(null);
@@ -32,7 +30,7 @@ public class Plateau {
         this.color.put("mine","\u001B[41m");
     }
     
-    public void plateauTest(){
+    private void plateauTest(){
         Tile piece = new Tile("mine", 1);
         plateau.set(6*9+8, piece);
         
@@ -72,7 +70,7 @@ public class Plateau {
         plateau.set(7*9+4, piece);
     }
     
-    public void test(){
+    private void test(){
         Tile a = new Tile("mine",3);
         Tile b = new Tile("champs",0);
         
@@ -86,18 +84,17 @@ public class Plateau {
         this.plateau.set(xb*9+yb, p.getPieces().get(1));
     }
         
-    public String getType(Integer coo){
-        return plateau.get(coo).getType();
+    public String getFieldType(Integer x, Integer y){
+        return plateau.get(x*9 + y).getType();
     }
     
     
-    public Integer getCrown(Integer coo, String key){
-        return this.plateau.get(coo).getCrown();
-    }
-    
-    public ArrayList<Tile> getPlateau(){
-        return this.plateau;
+    public Integer getCrown(Integer x, Integer y){
+        return this.plateau.get(x*9 + y).getCrown();
     }
 
+    public Tile getTile(Integer x, Integer y){
+        return this.plateau.get(x*9 + y);
+    }
     
 }

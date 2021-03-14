@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package controleur;
+package controller;
 
-import vue.Vue;
+import view.View;
 import model.*;
 import java.util.*;
 
@@ -13,13 +13,13 @@ import java.util.*;
  *
  * @author leovi
  */
-public class Controleur {
+public class Controller {
     ArrayList<Domino> pioche= new ArrayList<Domino>();
-    Plateau plateau1;
-    Plateau plateau2;
-    Vue vue;
+    Board plateau1;
+    Board plateau2;
+    View vue;
     
-    public Controleur (Plateau plateau1, Plateau plateau2, Vue vue){
+    public Controller (Board plateau1, Board plateau2, View vue){
         this.plateau1 = plateau1;
         this.plateau2 = plateau2;
         this.vue = vue;
@@ -108,7 +108,6 @@ public class Controleur {
         for(int i=0;i<4;i++){
             int sum = pioche.size();
             int random = new Random().nextInt(sum);
-            System.out.println(random);
             tirage.add(pioche.get(random));
         }
         Collections.sort(tirage);
