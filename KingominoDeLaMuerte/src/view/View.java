@@ -44,16 +44,40 @@ public class View {
         affichePlateau(this.plateau2);
     }
 
-    public void affichePioche(ArrayList<Domino> pioche){
-        for(Domino p : pioche){
-            affichePiece(p);
-            System.out.println("");
+    public void affichePioche(ArrayList<Domino> pieceAJouer, ArrayList<Domino> pioche){
+        if(pieceAJouer != null){
+            for(int i = 0;i < pioche.size(); i++){
+                affichePiece(pieceAJouer.get(i));
+                System.out.print("   ");
+                affichePiece(pioche.get(i));
+                System.out.println("");
+            }
         }
+        else{
+            for(Domino p : pioche){
+                affichePiece(p);
+                System.out.println("");
+            }
+        }
+        
+    }
+
+    public void choixPlacement(int joueur){
+        System.out.println("Le joueur "+joueur+" doit choisir les coordonnées de la pièce pour chaque coté de la pièce ( gauche puis droite )");
+    }
+
+    public void invalidDomino(){
+        System.out.println("Domino invalide");
     }
 
     public void affichePiece(Domino domino){
         System.out.print(color.get(domino.getPgauche().getType())+ANSI_WHITE+" "+domino.getPgauche().getCrown()+" "+ANSI_RESET+"|");
-        System.out.println(color.get(domino.getPdroite().getType())+ANSI_WHITE+" "+domino.getPdroite().getCrown()+" "+ANSI_RESET);
+        System.out.print(color.get(domino.getPdroite().getType())+ANSI_WHITE+" "+domino.getPdroite().getCrown()+" "+ANSI_RESET);
+        if (domino.getPlayer()==null){
+            System.out.print("    ");
+        }else{
+            System.out.print(" ["+domino.getPlayer()+"]");
+        }
     }
 
     public void choixPiece(int joueur, int n){

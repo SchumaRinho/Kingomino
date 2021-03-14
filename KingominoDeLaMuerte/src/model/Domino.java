@@ -17,11 +17,20 @@ public class Domino implements Comparable<Domino>{
     private Tile Pdroite;
     private Tile Pgauche;
     private int valeurPiece;
+    private Integer joueur = null;
     
     public Domino(Tile Pgauche, Tile Pdroite, int valeur){
         this.Pgauche = Pgauche;
         this.Pdroite = Pdroite;
         this.valeurPiece = valeur;
+    }
+
+    public void setPlayer(Integer playerNumber){
+        this.joueur = playerNumber;
+    }
+
+    public Integer getPlayer(){
+        return this.joueur;
     }
     
     public Tile getPdroite() {

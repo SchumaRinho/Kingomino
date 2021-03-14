@@ -14,7 +14,9 @@ import java.util.*;
  * @author leovi
  */
 public class Controller {
-    ArrayList<Domino> pioche= new ArrayList<Domino>();
+    ArrayList<Domino> pioche = new ArrayList<Domino>();
+    ArrayList<Domino> aJouer = new ArrayList<Domino>(4);
+    ArrayList<Domino> aPiocher = new ArrayList<Domino>(4);
     Board plateau1;
     Board plateau2;
     View vue;
@@ -24,41 +26,73 @@ public class Controller {
         this.plateau2 = plateau2;
         this.vue = vue;
         this.pioche = generatePiecePioche();
+        for (int i = 0; i < 4; i++) {
+            this.aJouer.add(null);
+        }
         main();
     }
     
     private void main(){
-        vue.affichePlateaux();
-        Queue domJ1 = new LinkedList<Integer>();
-        Queue domJ2 = new LinkedList<Integer>();
-        for(int i = 1; i < 2; i++){
-            ArrayList pioche = getPieceFromPioche();
+        Integer jActuel;
+        for(int i = 1; i < 3; i++){
+            this.aPiocher = getPieceFromPioche();
             if(i==1){
-                int joueur = 1;
-                Integer jActuel;
+                vue.affichePlateaux();
                 int n;
-                ArrayList rois = new ArrayList<Integer>();
+                ArrayList<Integer> rois = new ArrayList<Integer>();
                 rois.add(1);rois.add(1);rois.add(2);rois.add(2);
                 while(rois.size() !=0){
-                    vue.affichePioche(pioche);
+                    vue.affichePioche(null,aPiocher);
                     n = new Random().nextInt(rois.size());
-                    jActuel =  Integer.parseInt(rois.get(n).toString()); 
-                    vue.choixPiece(jActuel,pioche.size());
-                    pioche.remove(choixPiece(jActuel,pioche.size())-1);
+                    jActuel = rois.get(n);
+                    
+                    Integer choix = choixPiece(jActuel,aPiocher.size())-1;
+                    while(aJouer.contains(aPiocher.get(choix))){
+                        vue.invalidDomino();
+                        choix = choixPiece(jActuel,aPiocher.size())-1;
+                    }
+                    Domino d = aPiocher.get(choix);
+                    d.setPlayer(jActuel);
+                    this.aJouer.set(choix,d);
+
                     rois.remove(n);
                 }
             }else{
-                
+                for(Domino d : aJouer){
+                    vue.affichePlateaux();
+                    vue.affichePioche(this.aJouer,this.aPiocher);
+                    jActuel = d.getPlayer();
+                    ArrayList coo = choixPlacement(jActuel);
+                    if(jActuel==1){
+                        this.plateau1.addDomino(d,coo);
+                    }else{
+                        this.plateau2.addDomino(d,coo);
+                    }
+                    d.setPlayer(null);
+                }
             }
         }
     }
 
+    private ArrayList<Integer> choixPlacement(Integer player){
+        vue.choixPlacement(player);
+        ArrayList choix = new ArrayList<Integer>();
+        for(int i = 0; i < 4; i++){ 
+            choix.add(choixCoordonnées());
+        }
+        return choix;
+    }
+
+    private Integer choixCoordonnées(){
+        return choixValide(1,9)-1;
+    }
+    
     private Integer choixPiece(int joueur,int n){
-        return choixValide(1,n,"Choisissez un nombre entre 1 et " + n + " !");
+        vue.choixPiece(joueur,n);
+        return choixValide(1,n);
     }
     
     private ArrayList<Domino> generatePiecePioche(){
-        int numPieces=1;
         generatorPiece(new Tile("champs",0),new Tile("champs",0),2);
         generatorPiece(new Tile("forêt",0),new Tile("forêt",0),4);
         generatorPiece(new Tile("mer",0),new Tile("mer",0),3);                
@@ -131,14 +165,13 @@ public class Controller {
         return piecesToUpdate;
     }
     */
-        public int choixValide(int borneInf, int borneSup, String texte){
+        public int choixValide(int borneInf, int borneSup){
 		int choix = -1;
 		while(choix == -1){
 			Scanner choixScan = new Scanner(System.in);
 			try{
 				choix = choixScan.nextInt();
 				while(choix < borneInf || choix > borneSup){
-					System.out.println(texte);
 					choix = choixScan.nextInt();
 				}
 			}
