@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kingominodelamuerte;
+package kingdomino;
 
 import view.View;
 import controller.Controller;
@@ -12,7 +12,7 @@ import model.*;
  *
  * @author leovi
  */
-public class KingominoDeLaMuerte {
+public class Kingdomino {
 
     /**
      * @param args the command line arguments

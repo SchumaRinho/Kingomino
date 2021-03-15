@@ -15,9 +15,11 @@ import java.util.*;
  */
 public class Controller {
     ArrayList<Domino> pioche= new ArrayList<Domino>();
-    Board plateau1;
-    Board plateau2;
-    View vue;
+    private Board plateau1;
+    private Board plateau2;
+    private View vue;
+    private int score = 0;
+    private ArrayList<Integer> tileTraveled = new ArrayList<>(); 
     
     public Controller (Board plateau1, Board plateau2, View vue){
         this.plateau1 = plateau1;
@@ -101,6 +103,67 @@ public class Controller {
             Domino p = new Domino(Gauche,Droite,num_courant++);
             pioche.add(p);
         }
+    }
+    
+    private int calcScore(Board plateau){
+        for(int i = 0; i<9; i++){
+            for(int j = 0; j<9; j++){
+                if(plateau.getTile(i,j)!=null && plateau.getCrown(i,j)!=0 && !this.tileTraveled.contains(i*9+j))
+                    score += scoreField(plateau,plateau.getTile(i,j),i,j);
+            }
+        }
+        return score;
+    }
+    
+    private int scoreField(Board plateau, Tile tile, int i, int j){
+        ArrayList<Integer> infoField = new ArrayList<>();
+        infoField.add(0);infoField.add(0);
+        infoField= nextTile(plateau,tile,i,j,0, infoField);  // calcul.get(0) -> nombre de tuile identique
+        return infoField.get(0)*infoField.get(1);            // calcul.get(1) -> nombre de couronne sur la zonne
+        
+    }
+    
+    private ArrayList<Integer>nextTile(Board plateau, Tile tile, int i,int j, int prevMove, ArrayList<Integer> infoField){
+        tileTraveled.add(i*9+j);                                                                //historique des tuiles parcourues
+        infoField.set(0, infoField.get(0)+1);                                                   //On ajoute 1 au compteur de tuile identique
+        if(tile.getCrown()!=0)                                                                  // si il y a des couronnes sur la tuile, on l'ajoute dans le total des couronnes
+            infoField.set(1, infoField.get(1)+tile.getCrown());
+        if(i>0 && plateau.getTile(i-1,j)!=null && tile.getType() == plateau.getFieldType(i-1,j) && prevMove!=1){ //On veut parcourir l'ensemble des tile composant le terrain à calculer
+            infoField = nextTile(plateau, plateau.getTile(i-1,j), i-1,j,3,infoField);                            //(ici on monte avec i-1), 
+        }                                                                                                        //prevMove permet d'indiquer le mouvement qu'on a fait pour éviter de calculer 2 fois une même tuile 
+        if(j!=8 && plateau.getTile(i,j+1)!=null && tile.getType() == plateau.getFieldType(i,j+1) && prevMove!=2){
+            infoField = nextTile(plateau, plateau.getTile(i,j+1),i,j+1,4, infoField);
+        }
+        if(i<9 && plateau.getTile(i+1,j)!=null && tile.getType() == plateau.getFieldType(i+1,j) && prevMove!=3){
+            infoField = nextTile(plateau, plateau.getTile(i+1,j), i+1,j,1,infoField);
+        }
+        if(j!=0 && plateau.getTile(i,j-1)!=null && tile.getType() == plateau.getFieldType(i,j-1) && prevMove!=4){
+            infoField = nextTile(plateau, plateau.getTile(i,j-1),i,j-1,2,infoField);
+        }
+        return infoField;
+    }
+    
+    private boolean testPlacement(Board plateau){
+        int iMini=100,iMax=0,jMini=100,jMax=0;  //pour vérifier qu'on soit dans un tableau de 5x5
+            for(int i = 0; i<9; i++){           //On récupere le plus petit i et j, et on les soustrait au plus grand i et j 
+                for(int j = 0; j<9; j++){
+                    if(plateau.getTile(i,j)!=null){
+                        if(iMini==100)
+                            iMini=i;
+                        if(i>iMax)
+                            iMax=i;
+                        if(j<jMini)
+                            jMini=j;
+                        if(j>jMax)
+                            jMax=j;
+                    }
+                }
+            }
+        if((iMax-iMini)+1>5)
+            return false;
+        if((jMax-jMini)+1>5)
+            return false;
+        return true;
     }
     
     public ArrayList<Domino> getPieceFromPioche(){
