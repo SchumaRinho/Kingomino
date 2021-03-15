@@ -19,7 +19,9 @@ public class Controller {
     private Board plateau2;
     private View vue;
     private int score = 0;
-    private ArrayList<Integer> tileTraveled = new ArrayList<>(); 
+    private ArrayList<Integer> tileTraveled = new ArrayList<>();
+    private AIRandom aiRandom;
+    private boolean ai;
     
     public Controller (Board plateau1, Board plateau2, View vue){
         this.plateau1 = plateau1;
@@ -33,6 +35,11 @@ public class Controller {
         vue.affichePlateaux();
         Queue domJ1 = new LinkedList<Integer>();
         Queue domJ2 = new LinkedList<Integer>();
+        System.out.println("Voulez-vous jouer contre une ia ?");
+        if(choixValide(0,1,"0: Non / 1: Oui")==1){
+            aiRandom = new AIRandom(plateau2);
+            ai=true;
+        }
         for(int i = 1; i < 2; i++){
             ArrayList pioche = getPieceFromPioche();
             if(i==1){
@@ -45,8 +52,21 @@ public class Controller {
                     vue.affichePioche(pioche);
                     n = new Random().nextInt(rois.size());
                     jActuel =  Integer.parseInt(rois.get(n).toString()); 
-                    vue.choixPiece(jActuel,pioche.size());
-                    pioche.remove(choixPiece(jActuel,pioche.size())-1);
+                    if(!ai){
+                        vue.choixPiece(jActuel,pioche.size());
+                        pioche.remove(choixPiece(jActuel,pioche.size())-1);
+                    }
+                    else{
+                        if(jActuel==2){
+                            int choixia = aiRandom.getChoix(1,pioche.size());
+                            pioche.remove(choixia-1);
+                            System.out.println("L'ia a choisi la pièce n° " + choixia);
+                        }   
+                        else{
+                            vue.choixPiece(jActuel,pioche.size());
+                            pioche.remove(choixPiece(jActuel,pioche.size())-1);
+                        }
+                    }
                     rois.remove(n);
                 }
             }else{
@@ -142,8 +162,12 @@ public class Controller {
         }
         return infoField;
     }
+    /*
+    private ArrayList<Integer> listPlacement(Domino newDomino){
+        ArrayList<Integer> listPlacement = new ArrayList<Integer>();
+    }*/
     
-    private boolean testPlacement(Board plateau){
+    private boolean verifPlacement(Board plateau){
         int iMini=100,iMax=0,jMini=100,jMax=0;  //pour vérifier qu'on soit dans un tableau de 5x5
             for(int i = 0; i<9; i++){           //On récupere le plus petit i et j, et on les soustrait au plus grand i et j 
                 for(int j = 0; j<9; j++){

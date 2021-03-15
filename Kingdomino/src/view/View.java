@@ -49,6 +49,7 @@ public class View {
             affichePiece(p);
             System.out.println("");
         }
+        System.out.println("");
     }
 
     public void affichePiece(Domino domino){
@@ -59,7 +60,7 @@ public class View {
     public void choixPiece(int joueur, int n){
         System.out.println("Le joueur "+joueur+" doit choisir un domino [ entrez un nombre entre 1 et "+n+" ]");
     }
-
+            
     public void affichePlateau(Board plateau){
         String tmp = "";
         for(int i = 0; i<9; i++){
