@@ -14,69 +14,139 @@ import java.util.*;
  * @author leovi
  */
 public class Controller {
-    ArrayList<Domino> pioche= new ArrayList<Domino>();
+
+
     private Board plateau1;
     private Board plateau2;
     private View vue;
-    private int score = 0;
+
+    ArrayList<Domino> pioche = new ArrayList<Domino>();
+    ArrayList<Domino> aJouer = new ArrayList<Domino>(4);
+    ArrayList<Domino> aPiocher = new ArrayList<Domino>(4);
+
     private ArrayList<Integer> tileTraveled = new ArrayList<>();
+
+    private int score = 0;
+
     private AIRandom aiRandom;
-    private boolean ai;
+    private boolean ai=false;
     
+
     public Controller (Board plateau1, Board plateau2, View vue){
         this.plateau1 = plateau1;
         this.plateau2 = plateau2;
         this.vue = vue;
         this.pioche = generatePiecePioche();
+        for (int i = 0; i < 4; i++) {
+            this.aJouer.add(null);
+        }
         main();
     }
     
     private void main(){
-        vue.affichePlateaux();
-        Queue domJ1 = new LinkedList<Integer>();
-        Queue domJ2 = new LinkedList<Integer>();
-        System.out.println("Voulez-vous jouer contre une ia ?");
-        if(choixValide(0,1,"0: Non / 1: Oui")==1){
+        Integer jActuel;
+        int choix;
+        vue.choixJeuIA();
+        if(choixValide(0,1)==1){
             aiRandom = new AIRandom(plateau2);
             ai=true;
         }
-        for(int i = 1; i < 2; i++){
-            ArrayList pioche = getPieceFromPioche();
+
+        for(int i = 1; i <= 4; i++){
+            this.aPiocher = getPieceFromPioche();
+            System.out.println("Début tour n°"+i);
             if(i==1){
-                int joueur = 1;
-                Integer jActuel;
+                vue.affichePlateaux();
                 int n;
-                ArrayList rois = new ArrayList<Integer>();
+                Domino d;
+                ArrayList<Integer> rois = new ArrayList<Integer>();
                 rois.add(1);rois.add(1);rois.add(2);rois.add(2);
                 while(rois.size() !=0){
-                    vue.affichePioche(pioche);
+                    vue.affichePioche(null,aPiocher);
                     n = new Random().nextInt(rois.size());
-                    jActuel =  Integer.parseInt(rois.get(n).toString()); 
-                    if(!ai){
-                        vue.choixPiece(jActuel,pioche.size());
-                        pioche.remove(choixPiece(jActuel,pioche.size())-1);
-                    }
-                    else{
-                        if(jActuel==2){
-                            int choixia = aiRandom.getChoix(1,pioche.size());
-                            pioche.remove(choixia-1);
-                            System.out.println("L'ia a choisi la pièce n° " + choixia);
-                        }   
-                        else{
-                            vue.choixPiece(jActuel,pioche.size());
-                            pioche.remove(choixPiece(jActuel,pioche.size())-1);
+                    jActuel =  rois.get(n);
+                    
+                    if((ai && jActuel==2)){
+                        choix = aiRandom.getChoix(1,4);
+                        System.out.println("choix = "+choix);
+                        while(aJouer.contains(aPiocher.get(choix-1))){
+                            System.out.println("choix = "+choix);
+                            choix = aiRandom.getChoix(1,4);
                         }
+                        vue.choixIA(choix);
+                    }else{
+                        choix = choixPiece(jActuel,aPiocher.size());
+                        while(aJouer.contains(aPiocher.get(choix-1))){
+                            vue.invalidDomino();
+                            choix = choixPiece(jActuel,aPiocher.size());;
+                        }
+                        
                     }
+
+                    d = aPiocher.get(choix-1);
+                    d.setPlayer(jActuel);
+                    this.aJouer.set(choix-1,d);
                     rois.remove(n);
                 }
             }else{
-                
+                ArrayList<Integer> coo;
+                for(Domino d: aJouer){
+                    vue.affichePlateaux();
+                    vue.affichePioche(this.aJouer,this.aPiocher);
+                    jActuel = d.getPlayer();
+                    vue.choixPlacement(jActuel);
+                    if(jActuel==1){
+                        coo = choixPlacement(jActuel);
+                        this.plateau1.addDomino(d,coo);
+                    }else{
+                        if(ai){
+                            coo = choixPlacement(jActuel);
+                        }else{
+                            coo = choixPlacement(jActuel);
+                        }
+                        this.plateau2.addDomino(d,coo);
+                    }
+                    d.setPlayer(null);
+                    vue.affichePlateaux();
+                    vue.affichePioche(this.aJouer,this.aPiocher);
+                    if(ai && jActuel==2){
+                        choix = aiRandom.getChoix(1,4);
+                        while(aPiocher.get(choix-1).getPlayer()!=null){
+                            choix = aiRandom.getChoix(1,4);
+                        }
+                        vue.choixIA(choix);
+                    }else{
+                        choix = choixPiece(jActuel,aPiocher.size());
+                        while(aPiocher.get(choix-1).getPlayer()!=null){
+                            vue.invalidDomino();
+                            choix = choixPiece(jActuel,aPiocher.size());;
+                        }
+                    }
+                    d = aPiocher.get(choix-1);
+                    d.setPlayer(jActuel);
+                }
+                this.aJouer = new ArrayList<Domino>(this.aPiocher);
             }
         }
+
+        vue.finPartie(calcScore(plateau1),calcScore(plateau2));
+    }
+
+    private ArrayList<Integer> choixPlacement(Integer player){
+        ArrayList choix = new ArrayList<Integer>();
+        for(int i = 0; i < 4; i++){ 
+            choix.add(choixCoordonnées());
+        }
+        return choix;
+    }
+
+    private Integer choixCoordonnées(){
+        return choixValide(1,9)-1;
     }
 
     private Integer choixPiece(int joueur,int n){
-        return choixValide(1,n,"Choisissez un nombre entre 1 et " + n + " !");
+        vue.choixPiece(joueur,n);
+        return choixValide(1,n);
     }
     
     private ArrayList<Domino> generatePiecePioche(){
@@ -143,7 +213,7 @@ public class Controller {
         
     }
     
-    private ArrayList<Integer>nextTile(Board plateau, Tile tile, int i,int j, int prevMove, ArrayList<Integer> infoField){
+    private ArrayList<Integer> nextTile(Board plateau, Tile tile, int i,int j, int prevMove, ArrayList<Integer> infoField){
         tileTraveled.add(i*9+j);                                                                //historique des tuiles parcourues
         infoField.set(0, infoField.get(0)+1);                                                   //On ajoute 1 au compteur de tuile identique
         if(tile.getCrown()!=0)                                                                  // si il y a des couronnes sur la tuile, on l'ajoute dans le total des couronnes
@@ -196,6 +266,7 @@ public class Controller {
             int sum = pioche.size();
             int random = new Random().nextInt(sum);
             tirage.add(pioche.get(random));
+            this.pioche.remove(pioche.get(random));
         }
         Collections.sort(tirage);
         return tirage;
@@ -218,23 +289,31 @@ public class Controller {
         return piecesToUpdate;
     }
     */
-        public int choixValide(int borneInf, int borneSup, String texte){
-		int choix = -1;
-		while(choix == -1){
-			Scanner choixScan = new Scanner(System.in);
-			try{
-				choix = choixScan.nextInt();
-				while(choix < borneInf || choix > borneSup){
-					System.out.println(texte);
-					choix = choixScan.nextInt();
-				}
-			}
-			catch(Exception e){
-				System.out.println("Choix invalide");
-			}
-		}
-		return choix;
+    public int choixValide(int borneInf, int borneSup){
+        int choix = -1;
+        while(choix == -1){
+            Scanner choixScan = new Scanner(System.in);
+            try{
+                choix = choixScan.nextInt();
+                while(choix < borneInf || choix > borneSup){
+                        choix = choixScan.nextInt();
+                }
+            }
+            catch(Exception e){
+                System.out.println("Choix invalide");
+            }
+        }
+        return choix;
     }
+
+    public boolean cantBePlaced(Domino domino ,Board plateau, ArrayList<Integer> coo){
+        if(plateau.getTile(coo.get(0),coo.get(1))!=null || plateau.getTile(coo.get(2),coo.get(3))!=null ){
+            this.vue.invalidPlacement("Emplacement non disponible");
+            return false;
+        }
+        return true;
+    }
+    
     public ArrayList<Domino> getPioche(){
         return this.pioche;
     }

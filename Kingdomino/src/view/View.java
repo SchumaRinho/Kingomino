@@ -44,21 +44,64 @@ public class View {
         affichePlateau(this.plateau2);
     }
 
-    public void affichePioche(ArrayList<Domino> pioche){
-        for(Domino p : pioche){
-            affichePiece(p);
-            System.out.println("");
+    public void affichePioche(ArrayList<Domino> pieceAJouer, ArrayList<Domino> pioche){
+        if(pieceAJouer != null){
+            for(int i = 0;i < pioche.size(); i++){
+                affichePiece(pieceAJouer.get(i));
+                System.out.print("   ");
+                affichePiece(pioche.get(i));
+                System.out.println("");
+            }
         }
-        System.out.println("");
+        else{
+            for(Domino p : pioche){
+                affichePiece(p);
+                System.out.println("");
+            }
+        }
     }
 
-    public void affichePiece(Domino domino){
-        System.out.print(color.get(domino.getPgauche().getType())+ANSI_WHITE+" "+domino.getPgauche().getCrown()+" "+ANSI_RESET+"|");
-        System.out.println(color.get(domino.getPdroite().getType())+ANSI_WHITE+" "+domino.getPdroite().getCrown()+" "+ANSI_RESET);
+    public void choixPlacement(int joueur){
+        System.out.println("Le joueur "+joueur+" doit choisir les coordonnées de la pièce\nIl faut indiqué l'abscise de la partie gauche, puis l'ordonné. De même pour la partie droite.\n                                  [Coordonnées entre 1 et 9]");
     }
 
     public void choixPiece(int joueur, int n){
         System.out.println("Le joueur "+joueur+" doit choisir un domino [ entrez un nombre entre 1 et "+n+" ]");
+    }
+
+    public void choixJeuIA(){
+        System.out.println("Voulez-vous jouer contre une ia ?    [0: Non / 1: Oui]");
+    }
+
+    public void choixIA(int choixia){
+        System.out.println("L'ia a choisi la pièce n° " + choixia);
+    }
+
+    public void invalidDomino(){
+        System.out.println("Domino invalide");
+    }
+
+    public void invalidPlacement(String err){
+        System.out.println("Le domino ne peut être placé ici : "+err);
+    }
+
+    public void finPartie(int score1, int score2){
+        System.out.println("Score du joueur : " + score1 + "\nScore de l'IA : "+score2);
+        if(score1>2){
+            System.out.println("Victoire du joueur");
+        }else{
+            System.out.println("Défaite du joueur");
+        }
+    }
+
+    public void affichePiece(Domino domino){
+        System.out.print(color.get(domino.getPgauche().getType())+ANSI_WHITE+" "+domino.getPgauche().getCrown()+" "+ANSI_RESET+"|");
+        System.out.print(color.get(domino.getPdroite().getType())+ANSI_WHITE+" "+domino.getPdroite().getCrown()+" "+ANSI_RESET);
+        if (domino.getPlayer()==null){
+            System.out.print("    ");
+        }else{
+            System.out.print(" ["+domino.getPlayer()+"]");
+        }
     }
             
     public void affichePlateau(Board plateau){

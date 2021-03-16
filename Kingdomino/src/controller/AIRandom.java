@@ -20,12 +20,13 @@ public class AIRandom {
     public int getChoix(int borneInf, int borneSup){
         if(borneSup==borneInf)
             return borneInf;
-        return borneInf+ new Random().nextInt(borneSup-borneInf);
+        return borneInf+ new Random().nextInt(borneSup-borneInf + 1);
     }
     
+/*
     public Board getPlacement(){
         return plateau;
-    }
+    }*/
      
 }
 

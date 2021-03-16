@@ -70,18 +70,9 @@ public class Board {
         plateau.set(7*9+4, piece);
     }
     
-    private void test(){
-        Tile a = new Tile("mine",3);
-        Tile b = new Tile("champs",0);
-        
-        Domino p = new Domino(a,b,48);
-        
-        addTile(p,6,7,7,7);
-    }
-    
-    public void addTile(Domino p, Integer xa, Integer ya, Integer xb, Integer yb){
-        this.plateau.set(xa*9+ya, p.getPieces().get(0));
-        this.plateau.set(xb*9+yb, p.getPieces().get(1));
+    public void addDomino(Domino d, ArrayList<Integer> coo){
+        this.plateau.set(coo.get(0)*9+coo.get(1), d.getPgauche());
+        this.plateau.set(coo.get(2)*9+coo.get(3), d.getPdroite());
     }
         
     public String getFieldType(Integer x, Integer y){
