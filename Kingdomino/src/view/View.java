@@ -87,7 +87,7 @@ public class View {
 
     public void finPartie(int score1, int score2){
         System.out.println("Score du joueur : " + score1 + "\nScore de l'IA : "+score2);
-        if(score1>2){
+        if(score1>score2){
             System.out.println("Victoire du joueur");
         }else{
             System.out.println("Défaite du joueur");

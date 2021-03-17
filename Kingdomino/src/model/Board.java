@@ -30,44 +30,36 @@ public class Board {
         this.color.put("mine","\u001B[41m");
     }
     
-    private void plateauTest(){
-        Tile piece = new Tile("mine", 1);
-        plateau.set(6*9+8, piece);
-        
-        piece = new Tile("mer",0);
-        plateau.set(3*9+4, piece);
-        plateau.set(3*9+5, piece);
-        plateau.set(3*9+7, piece);
-        piece = new Tile("mer",1);
-        plateau.set(3*9+6, piece);
-        plateau.set(4*9+5, piece);
-        plateau.set(3*9+8, piece);
-        
-        piece = new Tile("forêt",0);
-        plateau.set(5*9+5, piece);
-        plateau.set(4*9+6, piece);
-        plateau.set(4*9+7, piece);
-        plateau.set(4*9+8, piece);
-        
-        piece = new Tile("champs",0);
-        plateau.set(5*9+4, piece);
-        plateau.set(5*9+7, piece);
-        plateau.set(5*9+8, piece);
-        plateau.set(7*9+5, piece);
-        piece = new Tile("champs",1);
-        plateau.set(7*9+6, piece);
-        
-        piece = new Tile("marécage",1);
-        plateau.set(6*9+6, piece);
-        piece = new Tile("marécage",2);
-        plateau.set(5*9+6, piece);
-        
-        piece = new Tile("plaine",0);
-        plateau.set(6*9+5, piece);
-        piece = new Tile("plaine",1);
-        plateau.set(6*9+4, piece);
-        piece = new Tile("plaine",2);
-        plateau.set(7*9+4, piece);
+    public void plateauTest(){
+        plateau.set(0*9+0, new Tile("champs",0));
+        plateau.set(1*9+0, new Tile("forêt",0));
+        plateau.set(0*9+1, new Tile("marécage",2));
+        plateau.set(0*9+2, new Tile("marécage",0));
+        plateau.set(0*9+3, new Tile("mine",2));
+        plateau.set(2*9+0, new Tile("forêt",0));
+        plateau.set(3*9+0, new Tile("champs",0));
+        plateau.set(4*9+0, new Tile("champs",1));
+        plateau.set(5*9+0, new Tile("champs",1));
+        plateau.set(3*9+1, new Tile("plaine",0));
+        plateau.set(4*9+1, new Tile("plaine",0));
+        plateau.set(5*9+1, new Tile("mine",0));
+
+    }
+    
+        public void plateauTest1(){
+        plateau.set(0*9+0, new Tile("mer",0));
+        plateau.set(1*9+0, new Tile("champs",0));
+        plateau.set(0*9+1, new Tile("mer",0));
+        plateau.set(0*9+2, new Tile("plaine",0));
+        plateau.set(0*9+3, new Tile("marécage",1));
+        plateau.set(1*9+1, new Tile("champs",0));
+        plateau.set(1*9+2, new Tile("plaine",0));
+        plateau.set(1*9+3, new Tile("marécage",0));
+        plateau.set(1*9+4, new Tile("marécage",0));
+        plateau.set(2*9+0, new Tile("mer",0));
+        plateau.set(2*9+1, new Tile("plaine",1));
+        plateau.set(2*9+2, new Tile("plaine",0));
+
     }
     
     public void addDomino(Domino d, ArrayList<ArrayList<Integer>> coo){
