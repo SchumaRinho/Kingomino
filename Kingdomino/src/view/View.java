@@ -62,7 +62,7 @@ public class View {
     }
 
     public void choixPlacement(int joueur){
-        System.out.println("Le joueur "+joueur+" doit choisir les coordonnées de la pièce\nIl faut indiqué l'abscise de la partie gauche, puis l'ordonné. De même pour la partie droite.\n                                  [Coordonnées entre 1 et 9]");
+        System.out.println("Le joueur "+joueur+" doit choisir les coordonnées de la pièce (exemple : 1,2) [Coordonnées entre 1 et 9]");
     }
 
     public void choixPiece(int joueur, int n){

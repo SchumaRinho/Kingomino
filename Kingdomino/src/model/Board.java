@@ -70,9 +70,9 @@ public class Board {
         plateau.set(7*9+4, piece);
     }
     
-    public void addDomino(Domino d, ArrayList<Integer> coo){
-        this.plateau.set(coo.get(0)*9+coo.get(1), d.getPgauche());
-        this.plateau.set(coo.get(2)*9+coo.get(3), d.getPdroite());
+    public void addDomino(Domino d, ArrayList<ArrayList<Integer>> coo){
+        this.plateau.set(coo.get(0).get(0)*9+coo.get(0).get(1), d.getPgauche());
+        this.plateau.set(coo.get(1).get(0)*9+coo.get(1).get(1), d.getPdroite());
     }
         
     public String getFieldType(Integer x, Integer y){

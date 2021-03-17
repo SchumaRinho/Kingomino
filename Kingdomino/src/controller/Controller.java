@@ -89,7 +89,7 @@ public class Controller {
                     rois.remove(n);
                 }
             }else{
-                ArrayList<Integer> coo;
+                ArrayList<ArrayList<Integer>> coo;
                 for(Domino d: aJouer){
                     vue.affichePlateaux();
                     vue.affichePioche(this.aJouer,this.aPiocher);
@@ -132,10 +132,10 @@ public class Controller {
         vue.finPartie(calcScore(plateau1),calcScore(plateau2));
     }
 
-    private ArrayList<Integer> choixPlacement(Integer player){
-        ArrayList choix = new ArrayList<Integer>();
-        for(int i = 0; i < 4; i++){ 
-            choix.add(choixCoordonnées());
+    private ArrayList<ArrayList<Integer>> choixPlacement(Integer player){
+        ArrayList choix = new ArrayList<ArrayList<Integer>>();
+        for(int i = 0; i < 2; i++){ 
+            choix.add(valideCoordonnees());
         }
         return choix;
     }
@@ -260,6 +260,38 @@ public class Controller {
         return true;
     }
     
+    private ArrayList valideCoordonnees() throws InputMismatchException{
+		int cooPlaceX =-1;
+		int cooPlaceY =-1;
+		boolean valide = false;
+		
+		while(!valide) {
+			Scanner sc = new Scanner(System.in);
+			
+			try{
+				String cooScan = sc.next();
+
+				Scanner scanVirgule = new Scanner(cooScan).useDelimiter(",");
+				cooPlaceX = scanVirgule.nextInt()-1;
+				cooPlaceY = scanVirgule.nextInt()-1;
+				scanVirgule.close();
+				
+				if(((cooPlaceX < 0) || (cooPlaceX > 9)) || ((cooPlaceY < 0) || (cooPlaceY > 9)))
+					System.out.println("Coordonnées non valide : vous avez entrée des coordonnées inférieur a zero ou supérieur a la grandeur du plateau");
+				else
+					valide = true;
+			}
+			catch (Exception e) {
+				System.out.println("Vous devez saisir sous le format 2,3 !");
+				continue;
+            }
+
+		}
+                ArrayList<Integer> test = new ArrayList<Integer>(Arrays.asList((Integer)cooPlaceX, (Integer)cooPlaceY));
+                System.out.println(test);
+		return test;
+	}
+    
     public ArrayList<Domino> getPieceFromPioche(){
         ArrayList<Domino> tirage = new ArrayList<Domino>();
         for(int i=0;i<4;i++){
@@ -305,7 +337,7 @@ public class Controller {
         }
         return choix;
     }
-
+    
     public boolean cantBePlaced(Domino domino ,Board plateau, ArrayList<Integer> coo){
         if(plateau.getTile(coo.get(0),coo.get(1))!=null || plateau.getTile(coo.get(2),coo.get(3))!=null ){
             this.vue.invalidPlacement("Emplacement non disponible");
