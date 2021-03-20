@@ -62,7 +62,14 @@ public class View {
     }
 
     public void choixPlacement(int joueur){
-        System.out.println("Le joueur "+joueur+" doit choisir les coordonnées de la pièce (exemple : 1,2) [Coordonnées entre 1 et 9]");
+        System.out.println("Le joueur "+joueur+" doit choisir les coordonnées de la pièce y,x (exemple : 1,2) [abscisse et ordonées entre 1 et 9]");
+    }
+    
+    public void indicPlacement(int n){
+        if(n==0)
+            System.out.println("Choisissez les coordonées de la tuile gauche");
+        else
+            System.out.println("Choisissez les coordonées de la tuile droite"); 
     }
 
     public void choixPiece(int joueur, int n){
@@ -106,8 +113,12 @@ public class View {
             
     public void affichePlateau(Board plateau){
         String tmp = "";
+        for(int z = 1; z<10; z++){
+                System.out.print("   "+z);
+        }
+        System.out.println("");
         for(int i = 0; i<9; i++){
-            tmp+= ANSI_WHITE+ "|"+ANSI_RESET;
+            tmp+=i+1 + ANSI_WHITE+ "|"+ANSI_RESET;
             for(int j = 0; j<9; j++){
                 if(plateau.getTile(i,j) == null){
                     tmp+="   ";

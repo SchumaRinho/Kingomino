@@ -9,11 +9,12 @@ import view.View;
 import model.*;
 import java.util.*;
 
+
 /**
  *
  * @author leovi
  */
-public class Controller {
+public class Controller  {
 
 
     private Board plateau1;
@@ -94,13 +95,13 @@ public class Controller {
                     jActuel = d.getPlayer();
                     vue.choixPlacement(jActuel);
                     if(jActuel==1){
-                        coo = choixPlacement(jActuel);
+                        coo = choixPlacement(jActuel,d,plateau1);
                         this.plateau1.addDomino(d,coo);
                     }else{
                         if(ai){
-                            coo = choixPlacement(jActuel);
+                            coo = choixPlacement(jActuel,d,plateau2);
                         }else{
-                            coo = choixPlacement(jActuel);
+                            coo = choixPlacement(jActuel,d,plateau2);
                         }
                         this.plateau2.addDomino(d,coo);
                     }
@@ -129,10 +130,33 @@ public class Controller {
         vue.finPartie(calcScore(plateau1),calcScore(plateau2));
     }
 
-    private ArrayList<ArrayList<Integer>> choixPlacement(Integer player){
-        ArrayList choix = new ArrayList<ArrayList<Integer>>();
-        for(int i = 0; i < 2; i++){ 
-            choix.add(valideCoordonnees());
+    private ArrayList<ArrayList<Integer>> choixPlacement(int player, Domino d, Board plateau){
+        boolean validatePlacement=false;
+        Board plateauCopy = new Board();
+        ArrayList<ArrayList<Integer>> choix = new ArrayList<ArrayList<Integer>>();
+        while(!validatePlacement){
+            plateauCopy.setPlateau((ArrayList<Tile>)plateau.getPlateau().clone());
+            for(int i = 0; i < 2; i++){
+                vue.indicPlacement(i);
+                choix.add(valideCoordonnees(plateauCopy));
+                if(i==1 && ((choix.get(0).get(0)>(choix.get(1).get(0))+1) || (choix.get(0).get(0)<(choix.get(1).get(0))-1) || (choix.get(0).get(1)>(choix.get(1).get(1))+1) || (choix.get(0).get(1)<(choix.get(1).get(1))-1))){
+                    vue.invalidPlacement(" Votre deuxième tuile doit être collée à la première");
+                    choix.remove(1);
+                    i--;
+                }
+                if(i==0){
+                    plateauCopy.addTile(d.getPgauche(),choix.get(0));
+                }
+                else
+                    plateauCopy.addTile(d.getPdroite(),choix.get(1));
+            }
+            if(plateauCopy.verifCoordDomino(choix) && verifPlacement(plateauCopy)){
+                validatePlacement=true;
+            }
+            else{
+                vue.invalidPlacement(" Il n'y aucun territoire similaire autour de ce domino ou  vous ne respectez pas la dimension 5x5");
+                choix.clear();
+            }
         }
         return choix;
     }
@@ -259,7 +283,7 @@ public class Controller {
         return true;
     }
     
-    private ArrayList valideCoordonnees() throws InputMismatchException{
+    private ArrayList valideCoordonnees(Board plateauPlayer) throws InputMismatchException{
 		int cooPlaceX =-1;
 		int cooPlaceY =-1;
 		boolean valide = false;
@@ -274,14 +298,17 @@ public class Controller {
 				cooPlaceX = scanVirgule.nextInt()-1;
 				cooPlaceY = scanVirgule.nextInt()-1;
 				scanVirgule.close();
-				
-				if(((cooPlaceX < 0) || (cooPlaceX > 9)) || ((cooPlaceY < 0) || (cooPlaceY > 9)))
-					System.out.println("Coordonnées non valide : vous avez entrée des coordonnées inférieur a zero ou supérieur a la grandeur du plateau");
+				ArrayList<Integer>cooTile = new ArrayList<Integer>();
+                                cooTile.add(cooPlaceX);cooTile.add(cooPlaceY);
+				if(((cooPlaceX < 0) || (cooPlaceX > 8)) || ((cooPlaceY < 0) || (cooPlaceY > 8)))
+                                    vue.invalidPlacement(" Coordonnées non valide : vous avez entrée des coordonnées inférieur à 1 ou supérieur à 9");
+                                else if(!plateauPlayer.verifTile(cooTile))
+                                    vue.invalidPlacement(" Il y a déjà une tuile ici");
 				else
 					valide = true;
 			}
 			catch (Exception e) {
-				System.out.println("Vous devez saisir sous le format 2,3 !");
+				System.out.println("Vous devez saisir sous le format y,x !");
 				continue;
             }
 
@@ -335,13 +362,13 @@ public class Controller {
         return choix;
     }
     
-    public boolean cantBePlaced(Domino domino ,Board plateau, ArrayList<Integer> coo){
+    /*public boolean cantBePlaced(Domino domino ,Board plateau, ArrayList<Integer> coo){
         if(plateau.getTile(coo.get(0),coo.get(1))!=null || plateau.getTile(coo.get(2),coo.get(3))!=null ){
             this.vue.invalidPlacement("Emplacement non disponible");
             return false;
         }
         return true;
-    }
+    }*/
     
     public ArrayList<Domino> getPioche(){
         return this.pioche;

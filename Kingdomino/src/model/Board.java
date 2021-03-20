@@ -8,7 +8,7 @@ package model;
 import java.util.*;
 
 
-public class Board {
+public class Board implements Cloneable{
     
     private ArrayList<Tile> plateau = new ArrayList<Tile>();
     public static HashMap<String,String> color;
@@ -61,12 +61,67 @@ public class Board {
         plateau.set(2*9+2, new Tile("plaine",0));
 
     }
+        
+    public boolean verifTile(ArrayList<Integer> coo){
+        if(getTile(coo.get(0),coo.get(1))==null){
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean verifCoordDomino(ArrayList<ArrayList<Integer>> coo){
+        if(coo.get(0).get(1)>coo.get(1).get(1)){
+            if(verifAround(coo.get(0),1) || verifAround(coo.get(1),2))
+                return true;
+            else
+                return false;
+        }
+        else if(coo.get(0).get(1)<coo.get(1).get(1)){
+            if(verifAround(coo.get(1),1) || verifAround(coo.get(0),2))
+                return true;
+            else
+                return false;
+        }   
+        else if(coo.get(0).get(0)>coo.get(1).get(0)){
+            return (verifAround(coo.get(0),3) || verifAround(coo.get(1),4)); 
+        }
+        else{
+             return (verifAround(coo.get(0),4) || verifAround(coo.get(1),3));
+        }
+    }
+    
+    private boolean verifAround(ArrayList<Integer> coo, int direction){
+        if(coo.get(1)!=0 && getTile(coo.get(0),coo.get(1)-1)!=null && direction != 1 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)-1).getType()) || (getTile(coo.get(0),coo.get(1)-1).getType()=="chateau"))){
+            return true;
+        }
+        if(coo.get(1)!=8 && getTile(coo.get(0),coo.get(1)+1)!=null && direction != 2 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)+1).getType()) || (getTile(coo.get(0),coo.get(1)+1).getType()=="chateau"))){
+            return true;
+        }
+        if(coo.get(0)!=0 && getTile(coo.get(0)-1,coo.get(1))!=null && direction != 3 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)-1,coo.get(1)).getType()) || (getTile(coo.get(0)-1,coo.get(1)).getType()=="chateau"))){
+            return true;
+        }
+        if(coo.get(0)!=8 && getTile(coo.get(0)+1,coo.get(1))!=null && direction != 4 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)+1,coo.get(1)).getType()) || (getTile(coo.get(0)+1,coo.get(1)).getType()=="chateau"))){
+            return true;
+        }
+        return false;
+    }
     
     public void addDomino(Domino d, ArrayList<ArrayList<Integer>> coo){
         this.plateau.set(coo.get(0).get(0)*9+coo.get(0).get(1), d.getPgauche());
         this.plateau.set(coo.get(1).get(0)*9+coo.get(1).get(1), d.getPdroite());
     }
-        
+    
+    public void addTile(Tile tile, ArrayList<Integer> coo){
+        this.plateau.set(coo.get(0)*9+coo.get(1), tile);
+    }
+    
+    public ArrayList<Tile> getPlateau(){
+        return plateau;
+    }
+     
+    public void setPlateau(ArrayList<Tile> newPlateau){
+        this.plateau = newPlateau;
+    }
     public String getFieldType(Integer x, Integer y){
         return plateau.get(x*9 + y).getType();
     }
@@ -79,5 +134,4 @@ public class Board {
     public Tile getTile(Integer x, Integer y){
         return this.plateau.get(x*9 + y);
     }
-    
 }
