@@ -7,8 +7,8 @@ package controller;
 
 import view.View;
 import model.*;
+import controller.player.*;
 import java.util.*;
-
 
 /**
  *
@@ -16,361 +16,107 @@ import java.util.*;
  */
 public class Controller  {
 
+    private Game game;
+    private View view;
 
-    private Board plateau1;
-    private Board plateau2;
-    private View vue;
-
-    ArrayList<Domino> pioche = new ArrayList<Domino>();
-    ArrayList<Domino> aJouer = new ArrayList<Domino>(4);
-    ArrayList<Domino> aPiocher = new ArrayList<Domino>(4);
-
-    private ArrayList<Integer> tileTraveled = new ArrayList<>();
+    private ArrayList<InterfacePlayer> players = new ArrayList<InterfacePlayer>(2);
+    public Integer currentPlayer;
 
     private AIRandom aiRandom;
     private boolean ai=false;
     
 
-    public Controller (Board plateau1, Board plateau2, View vue){
-        this.plateau1 = plateau1;
-        this.plateau2 = plateau2;
-        this.vue = vue;
-        this.pioche = generatePiecePioche();
-        for (int i = 0; i < 4; i++) {
-            this.aJouer.add(null);
-        }
+    public Controller (Game game, View view){
+        this.game = game;
+        this.view = view;
+
         main();
     }
+
+    private void doFirstTurn(){
+        this.game.getDominosFromDeck();
+        this.view.printGame();
+
+            // Initialisation de variables permettant de l'aléatoire pour le premier tour.  
+        ArrayList<Integer> kings = new ArrayList<Integer>();
+        kings.add(1);kings.add(1);kings.add(2);kings.add(2); // Deux rois par joueurs
+        int n;
+
+        int choice; 
+        Domino domino;
+
+        while(kings.size() != 0 ){
+
+            this.view.printDeck();
+            n = new Random().nextInt(kings.size());
+            this.currentPlayer = kings.get(n);
+            kings.remove(n);
+
+            this.view.printPlayerTurn(currentPlayer);
+            choice = this.players.get(currentPlayer-1).chooseDomino();
+            domino = this.game.toChoose.get(choice-1);
+            while(this.game.toPlay.contains(domino)){
+                if(this.players.get(currentPlayer-1).getClass() == PlayerTerminal.class){
+                    View.printNotAvailable();
+                }
+                choice = this.players.get(currentPlayer-1).chooseDomino();
+                domino = this.game.toChoose.get(choice-1);
+            }
+
+            domino.setPlayer(currentPlayer);
+
+            this.game.toPlay.set(choice-1,domino);
+        }
+    }
+
+    private void doChoice(){
+            int choice;
+            Domino domino;
+
+            this.view.printPlayerTurn(currentPlayer);
+            choice = this.players.get(currentPlayer-1).chooseDomino();
+            domino = this.game.toChoose.get(choice-1);
+            while(domino.getPlayer()!=null){
+                if(this.players.get(currentPlayer-1).getClass() == PlayerTerminal.class){
+                    View.printNotAvailable();
+                }
+                choice = this.players.get(currentPlayer-1).chooseDomino();
+                domino = this.game.toChoose.get(choice-1);
+            }
+
+            domino.setPlayer(currentPlayer);
+    }
+
+    private void doPlacement(Domino domino){
+        domino.resetPlayer();
+                                                                        // Non implémenté
+    }
     
+    // a remonté plus haut !!!
     private void main(){
-        Integer jActuel;
-        int choix;
-        vue.choixJeuIA();
-        if(choixValide(0,1)==1){
-            aiRandom = new AIRandom(plateau2);
-            ai=true;
-        }
+        // choice of AI or not
+        PlayerTerminal player = new PlayerTerminal(this.game);
+        this.players.add(player);
+        if(player.aiChoice())
+            this.players.add(new AIRandom(this.game));
+        else
+            this.players.add(new PlayerTerminal(this.game));
+        // Game playing
+        this.doFirstTurn();
+        for(int turn = 2; turn <=12; turn ++){
+            this.game.getDominosFromDeck();
+            for(Domino d : this.game.toPlay){
+                this.view.printGame();
+                this.view.printDeck();
+                this.currentPlayer = d.getPlayer();
 
-        for(int i = 1; i <= 4; i++){
-            this.aPiocher = getPieceFromPioche();
-            System.out.println("Début tour n°"+i);
-            if(i==1){
-                vue.affichePlateaux();
-                int n;
-                Domino d;
-                ArrayList<Integer> rois = new ArrayList<Integer>();
-                rois.add(1);rois.add(1);rois.add(2);rois.add(2);
-                while(rois.size() !=0){
-                    vue.affichePioche(null,aPiocher);
-                    n = new Random().nextInt(rois.size());
-                    jActuel =  rois.get(n);
-                    
-                    if((ai && jActuel==2)){
-                        choix = aiRandom.getChoix(1,4);
-                        System.out.println("choix = "+choix);
-                        while(aJouer.contains(aPiocher.get(choix-1))){
-                            System.out.println("choix = "+choix);
-                            choix = aiRandom.getChoix(1,4);
-                        }
-                        vue.choixIA(choix);
-                    }else{
-                        choix = choixPiece(jActuel,aPiocher.size());
-                        while(aJouer.contains(aPiocher.get(choix-1))){
-                            vue.invalidDomino();
-                            choix = choixPiece(jActuel,aPiocher.size());;
-                        }
-                        
-                    }
+                this.doPlacement(d);
+                
+                this.doChoice();
 
-                    d = aPiocher.get(choix-1);
-                    d.setPlayer(jActuel);
-                    this.aJouer.set(choix-1,d);
-                    rois.remove(n);
-                }
-            }else{
-                ArrayList<ArrayList<Integer>> coo;
-                for(Domino d: aJouer){
-                    vue.affichePlateaux();
-                    vue.affichePioche(this.aJouer,this.aPiocher);
-                    jActuel = d.getPlayer();
-                    vue.choixPlacement(jActuel);
-                    if(jActuel==1){
-                        coo = choixPlacement(jActuel,d,plateau1);
-                        this.plateau1.addDomino(d,coo);
-                    }else{
-                        if(ai){
-                            coo = choixPlacement(jActuel,d,plateau2);
-                        }else{
-                            coo = choixPlacement(jActuel,d,plateau2);
-                        }
-                        this.plateau2.addDomino(d,coo);
-                    }
-                    d.setPlayer(null);
-                    vue.affichePlateaux();
-                    vue.affichePioche(this.aJouer,this.aPiocher);
-                    if(ai && jActuel==2){
-                        choix = aiRandom.getChoix(1,4);
-                        while(aPiocher.get(choix-1).getPlayer()!=null){
-                            choix = aiRandom.getChoix(1,4);
-                        }
-                        vue.choixIA(choix);
-                    }else{
-                        choix = choixPiece(jActuel,aPiocher.size());
-                        while(aPiocher.get(choix-1).getPlayer()!=null){
-                            vue.invalidDomino();
-                            choix = choixPiece(jActuel,aPiocher.size());;
-                        }
-                    }
-                    d = aPiocher.get(choix-1);
-                    d.setPlayer(jActuel);
-                }
-                this.aJouer = new ArrayList<Domino>(this.aPiocher);
             }
+            this.game.toPlay = new ArrayList<Domino>(this.game.toChoose);
         }
-        vue.finPartie(calcScore(plateau1),calcScore(plateau2));
-    }
-
-    private ArrayList<ArrayList<Integer>> choixPlacement(int player, Domino d, Board plateau){
-        boolean validatePlacement=false;
-        Board plateauCopy = new Board();
-        ArrayList<ArrayList<Integer>> choix = new ArrayList<ArrayList<Integer>>();
-        while(!validatePlacement){
-            plateauCopy.setPlateau((ArrayList<Tile>)plateau.getPlateau().clone());
-            for(int i = 0; i < 2; i++){
-                vue.indicPlacement(i);
-                choix.add(valideCoordonnees(plateauCopy));
-                if(i==1 && ((choix.get(0).get(0)>(choix.get(1).get(0))+1) || (choix.get(0).get(0)<(choix.get(1).get(0))-1) || (choix.get(0).get(1)>(choix.get(1).get(1))+1) || (choix.get(0).get(1)<(choix.get(1).get(1))-1))){
-                    vue.invalidPlacement(" Votre deuxième tuile doit être collée à la première");
-                    choix.remove(1);
-                    i--;
-                }
-                if(i==0){
-                    plateauCopy.addTile(d.getPgauche(),choix.get(0));
-                }
-                else
-                    plateauCopy.addTile(d.getPdroite(),choix.get(1));
-            }
-            if(plateauCopy.verifCoordDomino(choix) && verifPlacement(plateauCopy)){
-                validatePlacement=true;
-            }
-            else{
-                vue.invalidPlacement(" Il n'y aucun territoire similaire autour de ce domino ou  vous ne respectez pas la dimension 5x5");
-                choix.clear();
-            }
-        }
-        return choix;
-    }
-
-    private Integer choixCoordonnées(){
-        return choixValide(1,9)-1;
-    }
-
-    private Integer choixPiece(int joueur,int n){
-        vue.choixPiece(joueur,n);
-        return choixValide(1,n);
-    }
-    
-    private ArrayList<Domino> generatePiecePioche(){
-        int numPieces=1;
-        generatorPiece(new Tile("champs",0),new Tile("champs",0),2);
-        generatorPiece(new Tile("forêt",0),new Tile("forêt",0),4);
-        generatorPiece(new Tile("mer",0),new Tile("mer",0),3);                
-        generatorPiece(new Tile("plaine",0),new Tile("plaine",0),2);                
-        generatorPiece(new Tile("marécage",0),new Tile("marécage",0),1);                
-        generatorPiece(new Tile("champs",0),new Tile("forêt",0),1);                
-        generatorPiece(new Tile("champs",0),new Tile("mer",0),1);                
-        generatorPiece(new Tile("champs",0),new Tile("plaine",0),1);                
-        generatorPiece(new Tile("champs",0),new Tile("marécage",0),1);                
-        generatorPiece(new Tile("forêt",0),new Tile("mer",0),1);                
-        generatorPiece(new Tile("forêt",0),new Tile("plaine",0),1);                
-        generatorPiece(new Tile("champs",1),new Tile("forêt",0),1);                
-        generatorPiece(new Tile("champs",1),new Tile("mer",0),1);                
-        generatorPiece(new Tile("champs",1),new Tile("plaine",0),1);                
-        generatorPiece(new Tile("champs",1),new Tile("marécage",0),1);                
-        generatorPiece(new Tile("champs",1),new Tile("mine",0),1);                
-        generatorPiece(new Tile("forêt",1),new Tile("champs",0),4);               
-        generatorPiece(new Tile("forêt",1),new Tile("mer",0),1);                
-        generatorPiece(new Tile("forêt",1),new Tile("plaine",0),1);                
-        generatorPiece(new Tile("mer",1),new Tile("champs",0),2);                
-        generatorPiece(new Tile("mer",1),new Tile("forêt",0),4);                
-        generatorPiece(new Tile("champs",0),new Tile("plaine",1),1);                
-        generatorPiece(new Tile("mer",0),new Tile("plaine",1),1);                    
-        generatorPiece(new Tile("champs",0),new Tile("marécage",1),1);                
-        generatorPiece(new Tile("plaine",0),new Tile("marécage",1),1);                
-        generatorPiece(new Tile("mine",1),new Tile("champs",0),1);                
-        generatorPiece(new Tile("champs",0),new Tile("plaine",2),1);                
-        generatorPiece(new Tile("mer",0),new Tile("plaine",2),1);                
-        generatorPiece(new Tile("champs",0),new Tile("marécage",2),1);                
-        generatorPiece(new Tile("plaine",0),new Tile("marécage",2),1);                
-        generatorPiece(new Tile("mine",2),new Tile("champs",0),1);                
-        generatorPiece(new Tile("marécage",0),new Tile("mine",2),2);                
-        generatorPiece(new Tile("champs",0),new Tile("mine",3),1);                
-        return pioche;
-    }
-    
-    private void generatorPiece(Tile Gauche, Tile Droite, int nb){
-        int num_courant = pioche.size();
-        for(int i=0;i<nb;i++){
-            Domino p = new Domino(Gauche,Droite,num_courant++);
-            pioche.add(p);
-        }
-    }
-    
-    private int calcScore(Board plateau){
-        this.tileTraveled.clear();
-        int score = 0;
-        for(int i = 0; i<9; i++){
-            for(int j = 0; j<9; j++){
-                if(plateau.getTile(i,j)!=null && plateau.getCrown(i,j)!=0 && !this.tileTraveled.contains(i*9+j))
-                    score += scoreField(plateau,plateau.getTile(i,j),i,j);
-            }
-        }
-        return score;
-    }
-    
-    private int scoreField(Board plateau, Tile tile, int i, int j){
-        ArrayList<Integer> infoField = new ArrayList<>();
-        infoField.add(0);infoField.add(0);
-        infoField= nextTile(plateau,tile,i,j, infoField);  // calcul.get(0) -> nombre de tuile identique
-        return infoField.get(0)*infoField.get(1);            // calcul.get(1) -> nombre de couronne sur la zonne
-        
-    }
-    
-    private ArrayList<Integer> nextTile(Board plateau, Tile tile, int i,int j, ArrayList<Integer> infoField){
-        this.tileTraveled.add(i*9+j);
-        infoField.set(0, infoField.get(0)+1);                                                   //On ajoute 1 au compteur de tuile identique
-        if(tile.getCrown()!=0)                                                                  // si il y a des couronnes sur la tuile, on l'ajoute dans le total des couronnes
-            infoField.set(1, infoField.get(1)+tile.getCrown());
-        if(i>0 && plateau.getTile(i-1,j)!=null && tile.getType() == plateau.getFieldType(i-1,j) && !this.tileTraveled.contains((i-1)*9+j)){ //On veut parcourir l'ensemble des tile composant le terrain à calculer
-            infoField = nextTile(plateau, plateau.getTile(i-1,j), i-1,j,infoField);                            //(ici on monte avec i-1), 
-        }                                                                                                        //prevMove permet d'indiquer le mouvement qu'on a fait pour éviter de calculer 2 fois une même tuile 
-        if(j!=8 && plateau.getTile(i,j+1)!=null && tile.getType() == plateau.getFieldType(i,j+1) && !this.tileTraveled.contains(i*9+(j+1)) ){
-            infoField = nextTile(plateau, plateau.getTile(i,j+1),i,j+1, infoField);
-        }
-        if(i<9 && plateau.getTile(i+1,j)!=null && tile.getType() == plateau.getFieldType(i+1,j) && !this.tileTraveled.contains((i+1)*9+j)){
-            infoField = nextTile(plateau, plateau.getTile(i+1,j), i+1,j,infoField);
-        }
-        if(j!=0 && plateau.getTile(i,j-1)!=null && tile.getType() == plateau.getFieldType(i,j-1) && !this.tileTraveled.contains(i*9+(j-1))){
-            infoField = nextTile(plateau, plateau.getTile(i,j-1),i,j-1,infoField);
-        }
-        return infoField;
-    }
-    /*
-    private ArrayList<Integer> listPlacement(Domino newDomino){
-        ArrayList<Integer> listPlacement = new ArrayList<Integer>();
-    }*/
-    
-    private boolean verifPlacement(Board plateau){
-        int iMini=100,iMax=0,jMini=100,jMax=0;  //pour vérifier qu'on soit dans un tableau de 5x5
-            for(int i = 0; i<9; i++){           //On récupere le plus petit i et j, et on les soustrait au plus grand i et j 
-                for(int j = 0; j<9; j++){
-                    if(plateau.getTile(i,j)!=null){
-                        if(iMini==100)
-                            iMini=i;
-                        if(i>iMax)
-                            iMax=i;
-                        if(j<jMini)
-                            jMini=j;
-                        if(j>jMax)
-                            jMax=j;
-                    }
-                }
-            }
-        if((iMax-iMini)+1>5)
-            return false;
-        if((jMax-jMini)+1>5)
-            return false;
-        return true;
-    }
-    
-    private ArrayList valideCoordonnees(Board plateauPlayer) throws InputMismatchException{
-		int cooPlaceX =-1;
-		int cooPlaceY =-1;
-		boolean valide = false;
-		
-		while(!valide) {
-			Scanner sc = new Scanner(System.in);
-			
-			try{
-				String cooScan = sc.next();
-
-				Scanner scanVirgule = new Scanner(cooScan).useDelimiter(",");
-				cooPlaceX = scanVirgule.nextInt()-1;
-				cooPlaceY = scanVirgule.nextInt()-1;
-				scanVirgule.close();
-				ArrayList<Integer>cooTile = new ArrayList<Integer>();
-                                cooTile.add(cooPlaceX);cooTile.add(cooPlaceY);
-				if(((cooPlaceX < 0) || (cooPlaceX > 8)) || ((cooPlaceY < 0) || (cooPlaceY > 8)))
-                                    vue.invalidPlacement(" Coordonnées non valide : vous avez entrée des coordonnées inférieur à 1 ou supérieur à 9");
-                                else if(!plateauPlayer.verifTile(cooTile))
-                                    vue.invalidPlacement(" Il y a déjà une tuile ici");
-				else
-					valide = true;
-			}
-			catch (Exception e) {
-				System.out.println("Vous devez saisir sous le format y,x !");
-				continue;
-            }
-
-		}
-		return new ArrayList<Integer>(Arrays.asList((Integer)cooPlaceX, (Integer)cooPlaceY));
-	}
-    
-    public ArrayList<Domino> getPieceFromPioche(){
-        ArrayList<Domino> tirage = new ArrayList<Domino>();
-        for(int i=0;i<4;i++){
-            int sum = pioche.size();
-            int random = new Random().nextInt(sum);
-            tirage.add(pioche.get(random));
-            this.pioche.remove(pioche.get(random));
-        }
-        Collections.sort(tirage);
-        return tirage;
-    }
-    /* Obsolete
-    private Pieces update(String type, boolean pGauche, Pieces piecesToUpdate){
-        HashMap <String,Integer> infoPieces = new HashMap<>();
-        int nombre = Integer.parseInt(type.substring(type.indexOf(' ')+1));
-        infoPieces.put(type.substring(0,type.indexOf(' ')),nombre);
-        if(!pGauche){
-            piecesToUpdate.setPgauche(infoPieces);
-        }
-        else{
-            piecesToUpdate.setPdroite(infoPieces);   
-        }
-        for (String j : pioche.keySet()){
-            if(j==type)
-                pioche.put(j,pioche.get(j)-1);
-        }
-        return piecesToUpdate;
-    }
-    */
-    public int choixValide(int borneInf, int borneSup){
-        int choix = -1;
-        while(choix == -1){
-            Scanner choixScan = new Scanner(System.in);
-            try{
-                choix = choixScan.nextInt();
-                while(choix < borneInf || choix > borneSup){
-                        choix = choixScan.nextInt();
-                }
-            }
-            catch(Exception e){
-                System.out.println("Choix invalide");
-            }
-        }
-        return choix;
-    }
-    
-    /*public boolean cantBePlaced(Domino domino ,Board plateau, ArrayList<Integer> coo){
-        if(plateau.getTile(coo.get(0),coo.get(1))!=null || plateau.getTile(coo.get(2),coo.get(3))!=null ){
-            this.vue.invalidPlacement("Emplacement non disponible");
-            return false;
-        }
-        return true;
-    }*/
-    
-    public ArrayList<Domino> getPioche(){
-        return this.pioche;
+        this.view.printScore();
     }
 }

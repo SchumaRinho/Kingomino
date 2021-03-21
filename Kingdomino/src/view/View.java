@@ -7,8 +7,9 @@ package view;
 
 import controller.Controller;
 import model.*;
-import java.util.ArrayList;
-import static model.Board.color;
+import java.util.*;
+import static model.Game.color;
+
 /**
  *
  * @author Clémentine
@@ -21,97 +22,25 @@ public class View {
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_WHITE = "\u001B[37m";
     
-    public static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
-    private Board plateau1, plateau2;
-    private Controller controleur;
+    private Game game;
+    private Controller controller;
     
-    public View (Board plateau1,Board plateau2){
-        this.plateau1 = plateau1;
-        this.plateau2 = plateau2;
-    }
-    
-    public void setPlateau(Board plateau1,Board plateau2){
-        this.plateau1 = plateau1;
-        this.plateau2 = plateau2;
+    public View(Game game){
+        this.game = game;
     }
 
-    public void affichePlateaux(){
+    // Print of state
+
+    public void printGame(){
         System.out.println("Plateau joueur 1");
-        affichePlateau(this.plateau1);
-        System.out.println("Plateau joueur 2");
-        affichePlateau(this.plateau2);
+        printBoard(game.getBoard(1));
+        System.out.println("Plateau joueur 1");
+        printBoard(game.getBoard(2));
     }
 
-    public void affichePioche(ArrayList<Domino> pieceAJouer, ArrayList<Domino> pioche){
-        if(pieceAJouer != null){
-            for(int i = 0;i < pioche.size(); i++){
-                affichePiece(pieceAJouer.get(i));
-                System.out.print("   ");
-                affichePiece(pioche.get(i));
-                System.out.println("");
-            }
-        }
-        else{
-            for(Domino p : pioche){
-                affichePiece(p);
-                System.out.println("");
-            }
-        }
-    }
-
-    public void choixPlacement(int joueur){
-        System.out.println("Le joueur "+joueur+" doit choisir les coordonnées de la pièce y,x (exemple : 1,2) [abscisse et ordonées entre 1 et 9]");
-    }
-    
-    public void indicPlacement(int n){
-        if(n==0)
-            System.out.println("Choisissez les coordonées de la tuile gauche");
-        else
-            System.out.println("Choisissez les coordonées de la tuile droite"); 
-    }
-
-    public void choixPiece(int joueur, int n){
-        System.out.println("Le joueur "+joueur+" doit choisir un domino [ entrez un nombre entre 1 et "+n+" ]");
-    }
-
-    public void choixJeuIA(){
-        System.out.println("Voulez-vous jouer contre une ia ?    [0: Non / 1: Oui]");
-    }
-
-    public void choixIA(int choixia){
-        System.out.println("L'ia a choisi la pièce n° " + choixia);
-    }
-
-    public void invalidDomino(){
-        System.out.println("Domino invalide");
-    }
-
-    public void invalidPlacement(String err){
-        System.out.println("Le domino ne peut être placé ici : "+err);
-    }
-
-    public void finPartie(int score1, int score2){
-        System.out.println("Score du joueur : " + score1 + "\nScore de l'IA : "+score2);
-        if(score1>score2){
-            System.out.println("Victoire du joueur");
-        }else{
-            System.out.println("Défaite du joueur");
-        }
-    }
-
-    public void affichePiece(Domino domino){
-        System.out.print(color.get(domino.getPgauche().getType())+ANSI_WHITE+" "+domino.getPgauche().getCrown()+" "+ANSI_RESET+"|");
-        System.out.print(color.get(domino.getPdroite().getType())+ANSI_WHITE+" "+domino.getPdroite().getCrown()+" "+ANSI_RESET);
-        if (domino.getPlayer()==null){
-            System.out.print("    ");
-        }else{
-            System.out.print(" ["+domino.getPlayer()+"]");
-        }
-    }
-            
-    public void affichePlateau(Board plateau){
+    public void printBoard(Board board){
         String tmp = "";
         for(int z = 1; z<10; z++){
                 System.out.print("   "+z);
@@ -120,18 +49,18 @@ public class View {
         for(int i = 0; i<9; i++){
             tmp+=i+1 + ANSI_WHITE+ "|"+ANSI_RESET;
             for(int j = 0; j<9; j++){
-                if(plateau.getTile(i,j) == null){
+                if(board.getTile(i,j) == null){
                     tmp+="   ";
                 }else{
-                    String key = plateau.getFieldType(i,j);
+                    String key = board.getFieldType(i,j);
                     if(key=="chateau"){
                         tmp+=ANSI_WHITE_BACKGROUND + " C " + ANSI_RESET;
                     }else{
                         tmp+=color.get(key);
-                        if(plateau.getCrown(i,j) == 0 ){
+                        if(board.getCrown(i,j) == 0 ){
                             tmp+="   ";
                         }else{
-                            tmp+=" "+ANSI_WHITE+plateau.getCrown(i,j)+" ";
+                            tmp+=" "+ANSI_WHITE+board.getCrown(i,j)+" ";
                         }
                         tmp+=ANSI_RESET;
                     }
@@ -141,6 +70,64 @@ public class View {
             tmp+="\n\n";
         }
         System.out.println(tmp);
-             
-	}
+    }
+
+    public void printDeck(){
+        ArrayList<Domino> toPlay = this.game.toPlay;
+        ArrayList<Domino> toChoose = this.game.toChoose;
+        if(toPlay.get(0) != null && toPlay.get(1) != null && toPlay.get(2) != null && toPlay.get(3) != null){
+            for(int i = 0;i < toPlay.size(); i++){
+                printDomino(toPlay.get(i));
+                System.out.print("   ");
+                printDomino(toChoose.get(i));
+                System.out.println("");
+            }
+        }
+        else{
+            for(Domino domino : toChoose){
+                printDomino(domino);
+                System.out.println("");
+            }
+        }
+    }
+
+    public void printDomino(Domino domino){
+        System.out.print(color.get(domino.getTileL().getType())+ANSI_WHITE+" "+domino.getTileL().getCrown()+" "+ANSI_RESET+"|");
+        System.out.print(color.get(domino.getTileR().getType())+ANSI_WHITE+" "+domino.getTileR().getCrown()+" "+ANSI_RESET);
+        if (domino.getPlayer()==null){
+            System.out.print("    ");
+        }else{
+            System.out.print(" ["+domino.getPlayer()+"]");
+        }
+    }
+
+    public void printPlayerTurn(Integer currentPlayer){
+        System.out.println("C'est le tour du joueur " + currentPlayer);
+    }
+
+    public void printScore(){
+        System.out.println("Fin de la partie  !");
+        System.out.println("Scores : ");
+        System.out.println("Joueur 1 : " + this.game.getScore(1));
+        System.out.println("Joueur 2 : " + this.game.getScore(2));
+    }
+
+    // Print from controller [static]
+
+    public static void printAiChoice(){
+        System.out.println("Voulez-vous jouer contre une ia ?    [0: Non / 1: Oui]");
+    }
+
+    public static void printDominoChoice(){
+        System.out.println("Entrez un nombre entre 1 et 4 pour choisir un domino");
+    }
+
+    public static void printOutOfBoundary(int inf, int sup){
+        System.out.println("Veuillez donner une valeur entre " + inf + " et " + sup);
+    }
+
+    public static void printNotAvailable(){
+        System.out.println("Ce choix n'est pas possible");
+    }
+
 }

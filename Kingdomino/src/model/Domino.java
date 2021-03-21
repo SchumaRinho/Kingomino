@@ -14,49 +14,50 @@ import java.util.HashMap;
  */
 public class Domino implements Comparable<Domino>{
 
-    private Tile Pdroite;
-    private Tile Pgauche;
-    private int valeurPiece;
-        private Integer joueur = null;
+    private Tile tileR;
+    private Tile tileL;
+    private int value;
+    private Integer player = null;
 
-    public Domino(Tile Pgauche, Tile Pdroite, int valeur){
-        this.Pgauche = Pgauche;
-        this.Pdroite = Pdroite;
-        this.valeurPiece = valeur;
+    public Domino(Tile tileR, Tile tileL, int value){
+        this.tileL = tileL;
+        this.tileR = tileR;
+        this.value = value;
+    }
+    
+    public Tile getTileR() {
+        return this.tileR;
     }
 
-    public void setPlayer(Integer playerNumber){
-        this.joueur = playerNumber;
+    public Tile getTileL() {
+        return this.tileL;
+    }
+
+    public int getValue(){
+        return this.value;
     }
 
     public Integer getPlayer(){
-        return this.joueur;
-    }
-    
-    public Tile getPdroite() {
-        return this.Pdroite;
+        return this.player;
     }
 
-    public Tile getPgauche() {
-        return this.Pgauche;
+    public void setPlayer(Integer player){
+        this.player = player;
     }
 
-    public int getValeur(){
-        return this.valeurPiece;
+    public void resetPlayer(){
+        this.player = null;
     }
   
-    public ArrayList<Tile> getPieces(){
-        ArrayList<Tile> piece = new ArrayList<>();
-        piece.add(getPgauche());
-        piece.add(getPdroite());
-        return piece;
+    public ArrayList<Tile> getAsList(){
+        ArrayList<Tile> tile = new ArrayList<>();
+        tile.add(this.tileL);
+        tile.add(this.tileR);
+        return tile;
     }
     
     @Override
-        public int compareTo(Domino emp) {
-         //trions les employés selon leur age dans l'ordre croiddant
-         //retroune un entier négative, zéro ou positive si l'age 
-         //de cet employé est moins que, égale à ou supérieur à l'objet comparé avec
-               return (this.valeurPiece - emp.valeurPiece);
+        public int compareTo(Domino domino) {
+               return (this.value - domino.getValue());
         }
 }
