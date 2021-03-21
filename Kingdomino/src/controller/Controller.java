@@ -98,8 +98,8 @@ public class Controller  {
                     if(jActuel==1){
                         possiblePlacement(d,plateau1);
                         if(!possiblePlacement.isEmpty()){
-                            coo = choixPlacement(jActuel,d,plateau2);
-                            this.plateau2.addDomino(d,coo);
+                            coo = choixPlacement(jActuel,d,plateau1);
+                            this.plateau1.addDomino(d,coo);
                         }
                         else
                             vue.impossiblePlacement();
@@ -178,7 +178,6 @@ public class Controller  {
     
     private ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement(Domino d, Board plateau){
         possiblePlacement.clear();
-        ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
         Board plateauCopy = new Board();
         for(int i=0;i<=8;i++){
             for(int j=0;j<=8;j++){
@@ -189,11 +188,33 @@ public class Controller  {
                 }
             }
         }
+        System.out.println(possiblePlacement);
         return possiblePlacement;
     }
     
     private void canBePlaced(Domino d, ArrayList<Integer> coo,Board plateau){
-        Board plateauCopy = new Board();
+    Board plateauCopy = new Board();
+    plateau.addTile(d.getPgauche(), coo);
+    ArrayList<ArrayList<Integer>> tmp = new ArrayList<ArrayList<Integer>>();
+
+    tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)-1)));
+    tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)+1)));
+    tmp.add(new ArrayList (Arrays.asList(coo.get(0)-1, coo.get(1))));
+    tmp.add(new ArrayList (Arrays.asList(coo.get(0)+1, coo.get(1))));
+    
+    for(int i = 0; i < 4 ; i++) {
+        if(plateau.verifTile(tmp.get(i))){
+            ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+            cooDomino.add(coo);
+            cooDomino.add(tmp.get(i));
+            plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getPdroite(), tmp.get(i));
+                    if(plateauCopy.verifCoordDomino(cooDomino) && verifPlacement(plateauCopy)){
+                        if(!possiblePlacement.contains(cooDomino))
+                           possiblePlacement.add(cooDomino);
+                    }
+        }
+    }
+        /*Board plateauCopy = new Board();
         plateau.addTile(d.getPgauche(), coo);
         if(plateau.verifTile(new ArrayList<Integer>(Arrays.asList(coo.get(0), coo.get(1)-1)))){
             ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
@@ -230,7 +251,7 @@ public class Controller  {
             if(plateauCopy.verifCoordDomino(cooDomino) && verifPlacement(plateauCopy)){
                possiblePlacement.add(cooDomino);
             }
-        }
+        }*/
     }
     
     private Integer choixPiece(int joueur,int n){
