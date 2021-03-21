@@ -24,6 +24,7 @@ public class Controller  {
     ArrayList<Domino> pioche = new ArrayList<Domino>();
     ArrayList<Domino> aJouer = new ArrayList<Domino>(4);
     ArrayList<Domino> aPiocher = new ArrayList<Domino>(4);
+    ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
 
     private ArrayList<Integer> tileTraveled = new ArrayList<>();
 
@@ -95,15 +96,29 @@ public class Controller  {
                     jActuel = d.getPlayer();
                     vue.choixPlacement(jActuel);
                     if(jActuel==1){
-                        coo = choixPlacement(jActuel,d,plateau1);
-                        this.plateau1.addDomino(d,coo);
+                        possiblePlacement(d,plateau1);
+                        if(!possiblePlacement.isEmpty()){
+                            coo = choixPlacement(jActuel,d,plateau2);
+                            this.plateau2.addDomino(d,coo);
+                        }
+                        else
+                            vue.impossiblePlacement();
                     }else{
                         if(ai){
-                            coo = choixPlacement(jActuel,d,plateau2);
+                            possiblePlacement(d,plateau2);
+                            if(!possiblePlacement.isEmpty()){
+                                coo = aiRandom.getPlacement(possiblePlacement);
+                                this.plateau2.addDomino(d,coo);
+                            }
                         }else{
-                            coo = choixPlacement(jActuel,d,plateau2);
+                            possiblePlacement(d,plateau2);
+                            if(!possiblePlacement.isEmpty()){
+                                coo = choixPlacement(jActuel,d,plateau2);
+                                this.plateau2.addDomino(d,coo);
+                            }
+                            else
+                                vue.impossiblePlacement();
                         }
-                        this.plateau2.addDomino(d,coo);
                     }
                     d.setPlayer(null);
                     vue.affichePlateaux();
@@ -129,13 +144,13 @@ public class Controller  {
         }
         vue.finPartie(calcScore(plateau1),calcScore(plateau2));
     }
-
+    
     private ArrayList<ArrayList<Integer>> choixPlacement(int player, Domino d, Board plateau){
         boolean validatePlacement=false;
         Board plateauCopy = new Board();
         ArrayList<ArrayList<Integer>> choix = new ArrayList<ArrayList<Integer>>();
         while(!validatePlacement){
-            plateauCopy.setPlateau((ArrayList<Tile>)plateau.getPlateau().clone());
+            plateauCopy.cloneFrom(plateau);
             for(int i = 0; i < 2; i++){
                 vue.indicPlacement(i);
                 choix.add(valideCoordonnees(plateauCopy));
@@ -160,11 +175,64 @@ public class Controller  {
         }
         return choix;
     }
-
-    private Integer choixCoordonnées(){
-        return choixValide(1,9)-1;
+    
+    private ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement(Domino d, Board plateau){
+        possiblePlacement.clear();
+        ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+        Board plateauCopy = new Board();
+        for(int i=0;i<=8;i++){
+            for(int j=0;j<=8;j++){
+                plateauCopy.cloneFrom(plateau);
+                ArrayList<Integer> coo = new ArrayList<Integer>(Arrays.asList((Integer)i, (Integer)j));
+                if(plateauCopy.verifTile(coo)){
+                    canBePlaced(d,coo,plateauCopy);
+                }
+            }
+        }
+        return possiblePlacement;
     }
-
+    
+    private void canBePlaced(Domino d, ArrayList<Integer> coo,Board plateau){
+        Board plateauCopy = new Board();
+        plateau.addTile(d.getPgauche(), coo);
+        if(plateau.verifTile(new ArrayList<Integer>(Arrays.asList(coo.get(0), coo.get(1)-1)))){
+            ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+            cooDomino.add(coo);
+            cooDomino.add(new ArrayList<Integer>(Arrays.asList(coo.get(0), coo.get(1)-1)));
+            plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getPdroite(), new ArrayList<Integer>(Arrays.asList(coo.get(0), coo.get(1)-1)));
+            if(plateauCopy.verifCoordDomino(cooDomino) && verifPlacement(plateauCopy)){
+               possiblePlacement.add(cooDomino);
+            }
+        }
+        if(plateau.verifTile(new ArrayList<Integer>(Arrays.asList(coo.get(0), coo.get(1)+1)))){
+            ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+            cooDomino.add(coo);
+            cooDomino.add(new ArrayList<Integer>(Arrays.asList(coo.get(0), coo.get(1)+1)));
+            plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getPdroite(), new ArrayList<Integer>(Arrays.asList(coo.get(0), coo.get(1)+1)));
+            if(plateauCopy.verifCoordDomino(cooDomino) && verifPlacement(plateauCopy)){
+                possiblePlacement.add(cooDomino);
+            }
+        }
+        if(plateau.verifTile(new ArrayList<Integer>(Arrays.asList(coo.get(0)-1, coo.get(1))))){
+            ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+            cooDomino.add(coo);
+            cooDomino.add(new ArrayList<Integer>(Arrays.asList(coo.get(0)-1, coo.get(1))));
+            plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getPdroite(), new ArrayList<Integer>(Arrays.asList(coo.get(0)-1, coo.get(1))));
+            if(plateauCopy.verifCoordDomino(cooDomino) && verifPlacement(plateauCopy)){
+               possiblePlacement.add(cooDomino);
+            }
+        }
+        if(plateau.verifTile(new ArrayList<Integer>(Arrays.asList(coo.get(0)+1, coo.get(1))))){
+            ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+            cooDomino.add(coo);
+            cooDomino.add(new ArrayList<Integer>(Arrays.asList(coo.get(0)+1, coo.get(1))));
+            plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getPdroite(), new ArrayList<Integer>(Arrays.asList(coo.get(0)+1, coo.get(1))));
+            if(plateauCopy.verifCoordDomino(cooDomino) && verifPlacement(plateauCopy)){
+               possiblePlacement.add(cooDomino);
+            }
+        }
+    }
+    
     private Integer choixPiece(int joueur,int n){
         vue.choixPiece(joueur,n);
         return choixValide(1,n);

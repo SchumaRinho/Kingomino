@@ -63,7 +63,7 @@ public class Board implements Cloneable{
     }
         
     public boolean verifTile(ArrayList<Integer> coo){
-        if(getTile(coo.get(0),coo.get(1))==null){
+        if(coo.get(0)>=0 && coo.get(0)<=8 && coo.get(1)>=0 && coo.get(1)<=8 && getTile(coo.get(0),coo.get(1))==null){
             return true;
         }
         return false;
@@ -91,16 +91,16 @@ public class Board implements Cloneable{
     }
     
     private boolean verifAround(ArrayList<Integer> coo, int direction){
-        if(coo.get(1)!=0 && getTile(coo.get(0),coo.get(1)-1)!=null && direction != 1 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)-1).getType()) || (getTile(coo.get(0),coo.get(1)-1).getType()=="chateau"))){
+        if(coo.get(1)>0 && getTile(coo.get(0),coo.get(1)-1)!=null && direction != 1 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)-1).getType()) || (getTile(coo.get(0),coo.get(1)-1).getType()=="chateau"))){
             return true;
         }
-        if(coo.get(1)!=8 && getTile(coo.get(0),coo.get(1)+1)!=null && direction != 2 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)+1).getType()) || (getTile(coo.get(0),coo.get(1)+1).getType()=="chateau"))){
+        if(coo.get(1)<8 && getTile(coo.get(0),coo.get(1)+1)!=null && direction != 2 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)+1).getType()) || (getTile(coo.get(0),coo.get(1)+1).getType()=="chateau"))){
             return true;
         }
-        if(coo.get(0)!=0 && getTile(coo.get(0)-1,coo.get(1))!=null && direction != 3 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)-1,coo.get(1)).getType()) || (getTile(coo.get(0)-1,coo.get(1)).getType()=="chateau"))){
+        if(coo.get(0)>0 && getTile(coo.get(0)-1,coo.get(1))!=null && direction != 3 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)-1,coo.get(1)).getType()) || (getTile(coo.get(0)-1,coo.get(1)).getType()=="chateau"))){
             return true;
         }
-        if(coo.get(0)!=8 && getTile(coo.get(0)+1,coo.get(1))!=null && direction != 4 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)+1,coo.get(1)).getType()) || (getTile(coo.get(0)+1,coo.get(1)).getType()=="chateau"))){
+        if(coo.get(0)<8 && getTile(coo.get(0)+1,coo.get(1))!=null && direction != 4 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)+1,coo.get(1)).getType()) || (getTile(coo.get(0)+1,coo.get(1)).getType()=="chateau"))){
             return true;
         }
         return false;
@@ -133,5 +133,8 @@ public class Board implements Cloneable{
 
     public Tile getTile(Integer x, Integer y){
         return this.plateau.get(x*9 + y);
+    }
+    public void cloneFrom(Board plateau){
+        this.setPlateau((ArrayList<Tile>)plateau.getPlateau().clone());
     }
 }

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package controller;
+import java.util.ArrayList;
 import java.util.Random;
 import model.*;
 /**
@@ -23,10 +24,10 @@ public class AIRandom {
         return borneInf+ new Random().nextInt(borneSup-borneInf + 1);
     }
     
-/*
-    public Board getPlacement(){
-        return plateau;
-    }*/
+    public ArrayList<ArrayList<Integer>> getPlacement(ArrayList<ArrayList<ArrayList<Integer>>> placementPossible){
+        int borneSup = placementPossible.size();
+        return placementPossible.get(new Random().nextInt(borneSup));
+    }
      
 }
 
