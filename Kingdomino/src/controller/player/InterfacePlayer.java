@@ -18,5 +18,5 @@ public interface InterfacePlayer {
 
     public int chooseDomino();
     
-    public ArrayList<ArrayList<Integer>> choosePlacement(Domino domino);
+    public ArrayList<ArrayList<Integer>> choosePlacement(ArrayList<ArrayList<ArrayList<Integer>>> placementPossible);
 }

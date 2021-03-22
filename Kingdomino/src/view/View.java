@@ -36,7 +36,7 @@ public class View {
     public void printGame(){
         System.out.println("Plateau joueur 1");
         printBoard(game.getBoard(1));
-        System.out.println("Plateau joueur 1");
+        System.out.println("Plateau joueur 2");
         printBoard(game.getBoard(2));
     }
 
@@ -111,8 +111,18 @@ public class View {
         System.out.println("Joueur 1 : " + this.game.getScore(1));
         System.out.println("Joueur 2 : " + this.game.getScore(2));
     }
+    
+    public void printNoPossibleChoice(){
+        System.out.println("aucun choix possible: pièce défaussée");
+    }
+    
 
-    // Print from controller [static]
+    public static void printDominoPlacement(int n){
+        if(n==0)
+            System.out.println("Choisissez les coordonées de la tuile gauche");
+        else
+            System.out.println("Choisissez les coordonées de la tuile droite"); 
+    } 
 
     public static void printAiChoice(){
         System.out.println("Voulez-vous jouer contre une ia ?    [0: Non / 1: Oui]");
@@ -129,5 +139,8 @@ public class View {
     public static void printNotAvailable(){
         System.out.println("Ce choix n'est pas possible");
     }
-
+    
+    public static void printFailed(){
+        System.out.println("Vous devez saisir sous le format y,x !");
+    }
 }

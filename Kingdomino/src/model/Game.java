@@ -7,7 +7,7 @@
 package model;
 
 import java.util.*;
-
+import view.*;
 /**
  *
  * @author Clémentine
@@ -54,6 +54,7 @@ public class Game {
 // public methods
 
     public int getScore(int boardNumber){
+        this.tileTraveled.clear();
         int score = 0;
         Board board;
         if(boardNumber == 1)
@@ -80,33 +81,8 @@ public class Game {
         Collections.sort(picked);
         this.toChoose = picked;
     }
-
-    public boolean verifPlacement(Board board){
-        int iMini=100,iMax=0,jMini=100,jMax=0;  //pour vérifier qu'on soit dans un tableau de 5x5
-            for(int i = 0; i<9; i++){           //On récupere le plus petit i et j, et on les soustrait au plus grand i et j 
-                for(int j = 0; j<9; j++){
-                    if(board.getTile(i,j)!=null){
-                        if(iMini==100)
-                            iMini=i;
-                        if(i>iMax)
-                            iMax=i;
-                        if(j<jMini)
-                            jMini=j;
-                        if(j>jMax)
-                            jMax=j;
-                    }
-                }
-            }
-        if((iMax-iMini)+1>5)
-            return false;
-        if((jMax-jMini)+1>5)
-            return false;
-        return true;
-    }
-
-// private methods
     
-    private ArrayList validCoo(Board board) throws InputMismatchException{
+    public ArrayList validCoo(Board board) throws InputMismatchException{
         int cooX =-1;
         int cooY =-1;
         boolean valid = false;
@@ -123,21 +99,21 @@ public class Game {
                 scanComma.close();
                 ArrayList<Integer>cooTile = new ArrayList<Integer>();
                 cooTile.add(cooX);cooTile.add(cooY);
-                if(((cooX < 0) || (cooX > 8)) || ((cooY < 0) || (cooY > 8)))
-                    System.out.println(" Coordonnées non valide : vous avez entrée des coordonnées inférieur à 1 ou supérieur à 9");
-                else if(!board.verifTile(cooTile))
-                    System.out.println(" Il y a déjà une tuile ici");
+                if(((cooX < 0) || (cooX > 8)) || ((cooY < 0) || (cooY > 8) || (!board.verifTile(cooTile))))
+                    View.printNotAvailable();
                 else
                     valid = true;
             }
             catch (Exception e) {
-                System.out.println("Vous devez saisir sous le format y,x !");
+                View.printFailed();
                 continue;
             }
         }
         return new ArrayList<Integer>(Arrays.asList((Integer)cooX, (Integer)cooY));
     }
 
+    // private methods
+    
     private int scoreField(Board board, Tile tile, int i, int j){
         ArrayList<Integer> infoField = new ArrayList<>();
         infoField.add(0);infoField.add(0);
@@ -164,6 +140,8 @@ public class Game {
         }
         return infoField;
     }
+    
+
 
     private ArrayList<Domino> generateDeck(){
         generatorTile(new Tile("champs",0),new Tile("champs",0),2);

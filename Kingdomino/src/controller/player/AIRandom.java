@@ -14,6 +14,7 @@ import view.*;
  */
 public class AIRandom implements InterfacePlayer {
     Game game;
+    Board board;
     
     public AIRandom(Game game){
         this.game = game;
@@ -24,9 +25,9 @@ public class AIRandom implements InterfacePlayer {
         return random;
     }
     
-    public ArrayList<ArrayList<Integer>> choosePlacement(Domino domino){
-        // Not done yet
-        return null;
+    public ArrayList<ArrayList<Integer>> choosePlacement(ArrayList<ArrayList<ArrayList<Integer>>> placementPossible){
+        int borneSup = placementPossible.size();
+        return placementPossible.get(new Random().nextInt(borneSup));
     }
 
      

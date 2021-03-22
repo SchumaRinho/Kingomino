@@ -53,7 +53,7 @@ public class Board implements Cloneable{
     }
         
     public boolean verifTile(ArrayList<Integer> coo){
-        if(getTile(coo.get(0),coo.get(1))==null){
+        if(coo.get(0)>=0 && coo.get(0)<=8 && coo.get(1)>=0 && coo.get(1)<=8 && getTile(coo.get(0),coo.get(1))==null){
             return true;
         }
         return false;
@@ -96,6 +96,29 @@ public class Board implements Cloneable{
         return false;
     }
     
+    public boolean verifPlacement(){
+        int iMini=100,iMax=0,jMini=100,jMax=0;  //pour vérifier qu'on soit dans un tableau de 5x5
+            for(int i = 0; i<9; i++){           //On récupere le plus petit i et j, et on les soustrait au plus grand i et j 
+                for(int j = 0; j<9; j++){
+                    if(this.getTile(i,j)!=null){
+                        if(iMini==100)
+                            iMini=i;
+                        if(i>iMax)
+                            iMax=i;
+                        if(j<jMini)
+                            jMini=j;
+                        if(j>jMax)
+                            jMax=j;
+                    }
+                }
+            }
+        if((iMax-iMini)+1>5)
+            return false;
+        if((jMax-jMini)+1>5)
+            return false;
+        return true;
+    }
+    
     public void addDomino(Domino d, ArrayList<ArrayList<Integer>> coo){
         this.board.set(coo.get(0).get(0)*9+coo.get(0).get(1), d.getTileL());
         this.board.set(coo.get(1).get(0)*9+coo.get(1).get(1), d.getTileR());
@@ -123,5 +146,9 @@ public class Board implements Cloneable{
 
     public Tile getTile(Integer x, Integer y){
         return this.board.get(x*9 + y);
+    }
+    
+    public void cloneFrom(Board plateau){
+        this.setPlateau((ArrayList<Tile>)plateau.getBoard().clone());
     }
 }

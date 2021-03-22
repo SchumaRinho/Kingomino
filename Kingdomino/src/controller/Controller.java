@@ -25,6 +25,8 @@ public class Controller  {
     private AIRandom aiRandom;
     private boolean ai=false;
     
+    ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
+
 
     public Controller (Game game, View view){
         this.game = game;
@@ -88,19 +90,30 @@ public class Controller  {
     }
 
     private void doPlacement(Domino domino){
+        this.view.printPlayerTurn(currentPlayer);
+        possiblePlacement(domino, game.getBoard(currentPlayer));
+        System.out.println(possiblePlacement);
+        if(!possiblePlacement.isEmpty()){
+            ArrayList<ArrayList<Integer>> coo = new ArrayList<ArrayList<Integer>>();
+            coo = this.players.get(currentPlayer-1).choosePlacement(possiblePlacement);
+            game.getBoard(currentPlayer).addDomino(domino, coo);
+        }
+        else{
+            view.printNoPossibleChoice();
+        }
         domino.resetPlayer();
-                                                                        // Non implémenté
+        
     }
     
     // a remonté plus haut !!!
     private void main(){
         // choice of AI or not
-        PlayerTerminal player = new PlayerTerminal(this.game);
+        PlayerTerminal player = new PlayerTerminal(this.game, this.game.getBoard(1));
         this.players.add(player);
         if(player.aiChoice())
             this.players.add(new AIRandom(this.game));
         else
-            this.players.add(new PlayerTerminal(this.game));
+            this.players.add(new PlayerTerminal(this.game, this.game.getBoard(2)));
         // Game playing
         this.doFirstTurn();
         for(int turn = 2; turn <=12; turn ++){
@@ -119,4 +132,47 @@ public class Controller  {
         }
         this.view.printScore();
     }
+    
+    private ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement(Domino d, Board plateau){
+        possiblePlacement.clear();
+        Board plateauCopy = new Board();
+        for(int i=0;i<=8;i++){
+            for(int j=0;j<=8;j++){
+                plateauCopy.cloneFrom(plateau);
+                ArrayList<Integer> coo = new ArrayList<Integer>(Arrays.asList((Integer)i, (Integer)j));
+                if(plateauCopy.verifTile(coo)){
+                    canBePlaced(d,coo,plateauCopy);
+                }
+            }
+        }
+        System.out.println(possiblePlacement);
+        return possiblePlacement;
+    }
+    
+    private void canBePlaced(Domino d, ArrayList<Integer> coo,Board plateau){
+        Board plateauCopy = new Board();
+        plateau.addTile(d.getTileL(), coo);
+        ArrayList<ArrayList<Integer>> tmp = new ArrayList<ArrayList<Integer>>();
+
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)-1)));
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)+1)));
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0)-1, coo.get(1))));
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0)+1, coo.get(1))));
+
+        for(int i = 0; i < 4 ; i++) {
+            if(plateau.verifTile(tmp.get(i))){
+                ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+                cooDomino.add(coo);
+                cooDomino.add(tmp.get(i));
+                plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getTileR(), tmp.get(i));
+                if(plateauCopy.verifCoordDomino(cooDomino) && plateauCopy.verifPlacement()){
+                    if(!possiblePlacement.contains(cooDomino)){
+                        possiblePlacement.add(cooDomino);
+                    }
+                }
+            }
+        }
+    }
+    
+    
 }
