@@ -18,10 +18,8 @@ public class Kingdomino {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Board board1 = new Board();
-        Board board2 = new Board();
-        //plateau2.plateauTest();
-        View view = new View(board1,board2);
-        Controller controller = new Controller(board1,board2,view);
+        Game game = new Game();
+        View view = new View(game);
+        Controller controller = new Controller(game,view);
     }   
 }

@@ -10,55 +10,45 @@ import java.util.*;
 
 public class Board implements Cloneable{
     
-    private ArrayList<Tile> plateau = new ArrayList<Tile>();
-    public static HashMap<String,String> color;
+    private ArrayList<Tile> board = new ArrayList<Tile>();
 
     public Board(){
-        ArrayList tmp = null;
         for(int i = 0; i<81; i++){
-            plateau.add(null);
+            board.add(null);
         }
-        Tile chateau = new Tile("chateau",0);
-        this.plateau.set(4*9+4,chateau);
-
-        this.color = new HashMap<String,String>();
-        this.color.put("marécage","\u001B[46m");
-        this.color.put("mer","\u001B[44m");
-        this.color.put("plaine","\u001B[42m");
-        this.color.put("champs","\u001B[43m");
-        this.color.put("forêt","\u001B[45m");
-        this.color.put("mine","\u001B[41m");
+        Tile castle = new Tile("chateau",0);
+        this.board.set(4*9+4,castle);
     }
     
-    public void plateauTest(){
-        plateau.set(0*9+0, new Tile("champs",0));
-        plateau.set(1*9+0, new Tile("forêt",0));
-        plateau.set(0*9+1, new Tile("marécage",2));
-        plateau.set(0*9+2, new Tile("marécage",0));
-        plateau.set(0*9+3, new Tile("mine",2));
-        plateau.set(2*9+0, new Tile("forêt",0));
-        plateau.set(3*9+0, new Tile("champs",0));
-        plateau.set(4*9+0, new Tile("champs",1));
-        plateau.set(5*9+0, new Tile("champs",1));
-        plateau.set(3*9+1, new Tile("plaine",0));
-        plateau.set(4*9+1, new Tile("plaine",0));
-        plateau.set(5*9+1, new Tile("mine",0));
+    public void testBoard1(){
+        board.set(0*9+0, new Tile("champs",0));
+        board.set(1*9+0, new Tile("forêt",0));
+        board.set(0*9+1, new Tile("marécage",2));
+        board.set(0*9+2, new Tile("marécage",0));
+        board.set(0*9+3, new Tile("mine",2));
+        board.set(2*9+0, new Tile("forêt",0));
+        board.set(3*9+0, new Tile("champs",0));
+        board.set(4*9+0, new Tile("champs",1));
+        board.set(5*9+0, new Tile("champs",1));
+        board.set(3*9+1, new Tile("plaine",0));
+        board.set(4*9+1, new Tile("plaine",0));
+        board.set(5*9+1, new Tile("mine",0));
 
     }
     
-        public void plateauTest1(){
-        plateau.set(0*9+0, new Tile("mer",0));
-        plateau.set(1*9+0, new Tile("champs",0));
-        plateau.set(0*9+1, new Tile("mer",0));
-        plateau.set(0*9+2, new Tile("plaine",0));
-        plateau.set(0*9+3, new Tile("marécage",1));
-        plateau.set(1*9+1, new Tile("champs",0));
-        plateau.set(1*9+2, new Tile("plaine",0));
-        plateau.set(1*9+3, new Tile("marécage",0));
-        plateau.set(1*9+4, new Tile("marécage",0));
-        plateau.set(2*9+0, new Tile("mer",0));
-        plateau.set(2*9+1, new Tile("plaine",1));
-        plateau.set(2*9+2, new Tile("plaine",0));
+        public void testBoard2(){
+        board.set(0*9+0, new Tile("mer",0));
+        board.set(1*9+0, new Tile("champs",0));
+        board.set(0*9+1, new Tile("mer",0));
+        board.set(0*9+2, new Tile("plaine",0));
+        board.set(0*9+3, new Tile("marécage",1));
+        board.set(1*9+1, new Tile("champs",0));
+        board.set(1*9+2, new Tile("plaine",0));
+        board.set(1*9+3, new Tile("marécage",0));
+        board.set(1*9+4, new Tile("marécage",0));
+        board.set(2*9+0, new Tile("mer",0));
+        board.set(2*9+1, new Tile("plaine",1));
+        board.set(2*9+2, new Tile("plaine",0));
 
     }
         
@@ -91,50 +81,74 @@ public class Board implements Cloneable{
     }
     
     private boolean verifAround(ArrayList<Integer> coo, int direction){
-        if(coo.get(1)>0 && getTile(coo.get(0),coo.get(1)-1)!=null && direction != 1 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)-1).getType()) || (getTile(coo.get(0),coo.get(1)-1).getType()=="chateau"))){
+        if(coo.get(1)!=0 && getTile(coo.get(0),coo.get(1)-1)!=null && direction != 1 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)-1).getType()) || (getTile(coo.get(0),coo.get(1)-1).getType()=="chateau"))){
             return true;
         }
-        if(coo.get(1)<8 && getTile(coo.get(0),coo.get(1)+1)!=null && direction != 2 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)+1).getType()) || (getTile(coo.get(0),coo.get(1)+1).getType()=="chateau"))){
+        if(coo.get(1)!=8 && getTile(coo.get(0),coo.get(1)+1)!=null && direction != 2 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0),coo.get(1)+1).getType()) || (getTile(coo.get(0),coo.get(1)+1).getType()=="chateau"))){
             return true;
         }
-        if(coo.get(0)>0 && getTile(coo.get(0)-1,coo.get(1))!=null && direction != 3 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)-1,coo.get(1)).getType()) || (getTile(coo.get(0)-1,coo.get(1)).getType()=="chateau"))){
+        if(coo.get(0)!=0 && getTile(coo.get(0)-1,coo.get(1))!=null && direction != 3 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)-1,coo.get(1)).getType()) || (getTile(coo.get(0)-1,coo.get(1)).getType()=="chateau"))){
             return true;
         }
-        if(coo.get(0)<8 && getTile(coo.get(0)+1,coo.get(1))!=null && direction != 4 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)+1,coo.get(1)).getType()) || (getTile(coo.get(0)+1,coo.get(1)).getType()=="chateau"))){
+        if(coo.get(0)!=8 && getTile(coo.get(0)+1,coo.get(1))!=null && direction != 4 && ((getTile(coo.get(0),coo.get(1)).getType()==getTile(coo.get(0)+1,coo.get(1)).getType()) || (getTile(coo.get(0)+1,coo.get(1)).getType()=="chateau"))){
             return true;
         }
         return false;
     }
     
+    public boolean verifPlacement(){
+        int iMini=100,iMax=0,jMini=100,jMax=0;  //pour vérifier qu'on soit dans un tableau de 5x5
+            for(int i = 0; i<9; i++){           //On récupere le plus petit i et j, et on les soustrait au plus grand i et j 
+                for(int j = 0; j<9; j++){
+                    if(this.getTile(i,j)!=null){
+                        if(iMini==100)
+                            iMini=i;
+                        if(i>iMax)
+                            iMax=i;
+                        if(j<jMini)
+                            jMini=j;
+                        if(j>jMax)
+                            jMax=j;
+                    }
+                }
+            }
+        if((iMax-iMini)+1>5)
+            return false;
+        if((jMax-jMini)+1>5)
+            return false;
+        return true;
+    }
+    
     public void addDomino(Domino d, ArrayList<ArrayList<Integer>> coo){
-        this.plateau.set(coo.get(0).get(0)*9+coo.get(0).get(1), d.getPgauche());
-        this.plateau.set(coo.get(1).get(0)*9+coo.get(1).get(1), d.getPdroite());
+        this.board.set(coo.get(0).get(0)*9+coo.get(0).get(1), d.getTileL());
+        this.board.set(coo.get(1).get(0)*9+coo.get(1).get(1), d.getTileR());
     }
     
     public void addTile(Tile tile, ArrayList<Integer> coo){
-        this.plateau.set(coo.get(0)*9+coo.get(1), tile);
+        this.board.set(coo.get(0)*9+coo.get(1), tile);
     }
     
-    public ArrayList<Tile> getPlateau(){
-        return plateau;
+    public ArrayList<Tile> getBoard(){
+        return this.board;
     }
      
-    public void setPlateau(ArrayList<Tile> newPlateau){
-        this.plateau = newPlateau;
+    public void setPlateau(ArrayList<Tile> newBoard){
+        this.board = newBoard;
     }
     public String getFieldType(Integer x, Integer y){
-        return plateau.get(x*9 + y).getType();
+        return board.get(x*9 + y).getType();
     }
     
     
     public Integer getCrown(Integer x, Integer y){
-        return this.plateau.get(x*9 + y).getCrown();
+        return this.board.get(x*9 + y).getCrown();
     }
 
     public Tile getTile(Integer x, Integer y){
-        return this.plateau.get(x*9 + y);
+        return this.board.get(x*9 + y);
     }
+    
     public void cloneFrom(Board plateau){
-        this.setPlateau((ArrayList<Tile>)plateau.getPlateau().clone());
+        this.setPlateau((ArrayList<Tile>)plateau.getBoard().clone());
     }
 }
