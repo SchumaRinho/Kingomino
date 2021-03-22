@@ -21,12 +21,10 @@ public class Controller  {
 
     private ArrayList<InterfacePlayer> players = new ArrayList<InterfacePlayer>(2);
     public Integer currentPlayer;
-
+    
+    private AIScore aiScore;
     private AIRandom aiRandom;
     private boolean ai=false;
-    
-    ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
-
 
     public Controller (Game game, View view){
         this.game = game;
@@ -56,18 +54,18 @@ public class Controller  {
 
             this.view.printPlayerTurn(currentPlayer);
             choice = this.players.get(currentPlayer-1).chooseDomino();
-            domino = this.game.toChoose.get(choice-1);
-            while(this.game.toPlay.contains(domino)){
+            domino = this.game.getToChoose().get(choice-1);
+            while(this.game.getToPlay().contains(domino)){
                 if(this.players.get(currentPlayer-1).getClass() == PlayerTerminal.class){
                     View.printNotAvailable();
                 }
                 choice = this.players.get(currentPlayer-1).chooseDomino();
-                domino = this.game.toChoose.get(choice-1);
+                domino = this.game.getToChoose().get(choice-1);
             }
 
             domino.setPlayer(currentPlayer);
 
-            this.game.toPlay.set(choice-1,domino);
+            this.game.getToPlay().set(choice-1,domino);
         }
     }
 
@@ -77,13 +75,13 @@ public class Controller  {
 
             this.view.printPlayerTurn(currentPlayer);
             choice = this.players.get(currentPlayer-1).chooseDomino();
-            domino = this.game.toChoose.get(choice-1);
+            domino = this.game.getToChoose().get(choice-1);
             while(domino.getPlayer()!=null){
                 if(this.players.get(currentPlayer-1).getClass() == PlayerTerminal.class){
                     View.printNotAvailable();
                 }
                 choice = this.players.get(currentPlayer-1).chooseDomino();
-                domino = this.game.toChoose.get(choice-1);
+                domino = this.game.getToChoose().get(choice-1);
             }
 
             domino.setPlayer(currentPlayer);
@@ -91,11 +89,10 @@ public class Controller  {
 
     private void doPlacement(Domino domino){
         this.view.printPlayerTurn(currentPlayer);
-        possiblePlacement(domino, game.getBoard(currentPlayer));
-        System.out.println(possiblePlacement);
-        if(!possiblePlacement.isEmpty()){
+        this.game.possiblePlacement(domino, game.getBoard(currentPlayer));
+        if(!this.game.getPossiblePlacement().isEmpty()){
             ArrayList<ArrayList<Integer>> coo = new ArrayList<ArrayList<Integer>>();
-            coo = this.players.get(currentPlayer-1).choosePlacement(possiblePlacement);
+            coo = this.players.get(currentPlayer-1).choosePlacement(this.game.getPossiblePlacement());
             game.getBoard(currentPlayer).addDomino(domino, coo);
         }
         else{
@@ -111,14 +108,14 @@ public class Controller  {
         PlayerTerminal player = new PlayerTerminal(this.game, this.game.getBoard(1));
         this.players.add(player);
         if(player.aiChoice())
-            this.players.add(new AIRandom(this.game));
+            this.players.add(new AIScore(this.game,this.game.getBoard(2)));
         else
             this.players.add(new PlayerTerminal(this.game, this.game.getBoard(2)));
         // Game playing
         this.doFirstTurn();
         for(int turn = 2; turn <=12; turn ++){
             this.game.getDominosFromDeck();
-            for(Domino d : this.game.toPlay){
+            for(Domino d : this.game.getToPlay()){
                 this.view.printGame();
                 this.view.printDeck();
                 this.currentPlayer = d.getPlayer();
@@ -128,51 +125,9 @@ public class Controller  {
                 this.doChoice();
 
             }
-            this.game.toPlay = new ArrayList<Domino>(this.game.toChoose);
+            this.game.setToPlay(new ArrayList<Domino>(this.game.getToChoose()));
         }
         this.view.printScore();
-    }
-    
-    private ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement(Domino d, Board plateau){
-        possiblePlacement.clear();
-        Board plateauCopy = new Board();
-        for(int i=0;i<=8;i++){
-            for(int j=0;j<=8;j++){
-                plateauCopy.cloneFrom(plateau);
-                ArrayList<Integer> coo = new ArrayList<Integer>(Arrays.asList((Integer)i, (Integer)j));
-                if(plateauCopy.verifTile(coo)){
-                    canBePlaced(d,coo,plateauCopy);
-                }
-            }
-        }
-        System.out.println(possiblePlacement);
-        return possiblePlacement;
-    }
-    
-    private void canBePlaced(Domino d, ArrayList<Integer> coo,Board plateau){
-        Board plateauCopy = new Board();
-        plateau.addTile(d.getTileL(), coo);
-        ArrayList<ArrayList<Integer>> tmp = new ArrayList<ArrayList<Integer>>();
-
-        tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)-1)));
-        tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)+1)));
-        tmp.add(new ArrayList (Arrays.asList(coo.get(0)-1, coo.get(1))));
-        tmp.add(new ArrayList (Arrays.asList(coo.get(0)+1, coo.get(1))));
-
-        for(int i = 0; i < 4 ; i++) {
-            if(plateau.verifTile(tmp.get(i))){
-                ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
-                cooDomino.add(coo);
-                cooDomino.add(tmp.get(i));
-                plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getTileR(), tmp.get(i));
-                if(plateauCopy.verifCoordDomino(cooDomino) && plateauCopy.verifPlacement()){
-                    if(!possiblePlacement.contains(cooDomino)){
-                        possiblePlacement.add(cooDomino);
-                    }
-                }
-            }
-        }
-    }
-    
+    } 
     
 }

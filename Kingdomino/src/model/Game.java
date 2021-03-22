@@ -18,12 +18,17 @@ public class Game {
 
     private Board board1 = new Board();
     private Board board2 = new Board();
+    private Domino selectedDomino;
 
-    public ArrayList<Domino> deck = new ArrayList<Domino>();
-    public ArrayList<Domino> toPlay = new ArrayList<Domino>(4);
-    public ArrayList<Domino> toChoose = new ArrayList<Domino>(4);
+    private ArrayList<Domino> deck = new ArrayList<Domino>();
+    private ArrayList<Domino> toPlay = new ArrayList<Domino>(4);
+    private ArrayList<Domino> toChoose = new ArrayList<Domino>(4);
 
-
+    private ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
+    
+    public ArrayList<ArrayList<ArrayList<Integer>>> getPossiblePlacement() {
+        return possiblePlacement;
+    }
     public static HashMap<String,String> color;
 
     private ArrayList<Integer> tileTraveled = new ArrayList<>();
@@ -65,6 +70,17 @@ public class Game {
             for(int j = 0; j<9; j++){
                 if(board.getTile(i,j)!=null && board.getCrown(i,j)!=0 && !this.tileTraveled.contains(i*9+j))
                     score += scoreField(board,board.getTile(i,j),i,j);
+            }
+        }
+        return score;
+    }
+    public int getScoreAI(Board aiBoard){
+        this.tileTraveled.clear();
+        int score = 0;
+        for(int i = 0; i<9; i++){
+            for(int j = 0; j<9; j++){
+                if(aiBoard.getTile(i,j)!=null && aiBoard.getCrown(i,j)!=0 && !this.tileTraveled.contains(i*9+j))
+                    score += scoreField(aiBoard,aiBoard.getTile(i,j),i,j);
             }
         }
         return score;
@@ -111,6 +127,24 @@ public class Game {
         }
         return new ArrayList<Integer>(Arrays.asList((Integer)cooX, (Integer)cooY));
     }
+    
+        
+    public ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement(Domino d, Board plateau){
+        this.selectedDomino=d;
+        possiblePlacement.clear();
+        Board plateauCopy = new Board();
+        for(int i=0;i<=8;i++){
+            for(int j=0;j<=8;j++){
+                plateauCopy.cloneFrom(plateau);
+                ArrayList<Integer> coo = new ArrayList<Integer>(Arrays.asList((Integer)i, (Integer)j));
+                if(plateauCopy.verifTile(coo)){
+                    canBePlaced(d,coo,plateauCopy);
+                }
+            }
+        }
+        return possiblePlacement;
+    }
+   
 
     // private methods
     
@@ -186,6 +220,51 @@ public class Game {
             Domino domino = new Domino(tileL,tileR,currentNumber++);
             deck.add(domino);
         }
+    }
+    
+    private void canBePlaced(Domino d, ArrayList<Integer> coo,Board plateau){
+        Board plateauCopy = new Board();
+        plateau.addTile(d.getTileL(), coo);
+        ArrayList<ArrayList<Integer>> tmp = new ArrayList<ArrayList<Integer>>();
+
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)-1)));
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0), coo.get(1)+1)));
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0)-1, coo.get(1))));
+        tmp.add(new ArrayList (Arrays.asList(coo.get(0)+1, coo.get(1))));
+
+        for(int i = 0; i < 4 ; i++) {
+            if(plateau.verifTile(tmp.get(i))){
+                ArrayList<ArrayList<Integer>> cooDomino = new ArrayList<ArrayList<Integer>>();
+                cooDomino.add(coo);
+                cooDomino.add(tmp.get(i));
+                plateauCopy.cloneFrom(plateau); plateauCopy.addTile(d.getTileR(), tmp.get(i));
+                if(plateauCopy.verifCoordDomino(cooDomino) && plateauCopy.verifPlacement()){
+                    if(!possiblePlacement.contains(cooDomino)){
+                        possiblePlacement.add(cooDomino);
+                    }
+                }
+            }
+        }
+    }
+    
+    public ArrayList<Domino> getDeck() {
+        return deck;
+    }
+
+    public ArrayList<Domino> getToPlay() {
+        return toPlay;
+    }
+
+    public ArrayList<Domino> getToChoose() {
+        return toChoose;
+    }
+    
+    public Domino getSelectedDomino() {
+        return selectedDomino;
+    }
+    
+    public void setToPlay(ArrayList<Domino> toPlay) {
+        this.toPlay = toPlay;
     }
 
 }

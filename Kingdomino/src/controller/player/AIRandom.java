@@ -14,7 +14,6 @@ import view.*;
  */
 public class AIRandom implements InterfacePlayer {
     Game game;
-    Board board;
     
     public AIRandom(Game game){
         this.game = game;

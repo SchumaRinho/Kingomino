@@ -73,8 +73,8 @@ public class View {
     }
 
     public void printDeck(){
-        ArrayList<Domino> toPlay = this.game.toPlay;
-        ArrayList<Domino> toChoose = this.game.toChoose;
+        ArrayList<Domino> toPlay = this.game.getToPlay();
+        ArrayList<Domino> toChoose = this.game.getToChoose();
         if(toPlay.get(0) != null && toPlay.get(1) != null && toPlay.get(2) != null && toPlay.get(3) != null){
             for(int i = 0;i < toPlay.size(); i++){
                 printDomino(toPlay.get(i));
