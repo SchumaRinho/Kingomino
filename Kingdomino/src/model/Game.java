@@ -16,15 +16,16 @@ public class Game {
 
 // Attributs
 
-    private Board board1 = new Board();
-    private Board board2 = new Board();
+    private final Board board1 = new Board();
+    private final Board board2 = new Board();
     private Domino selectedDomino;
+    private final int sizeToPlay = 4;
 
     private ArrayList<Domino> deck = new ArrayList<Domino>();
-    private ArrayList<Domino> toPlay = new ArrayList<Domino>(4);
-    private ArrayList<Domino> toChoose = new ArrayList<Domino>(4);
+    private ArrayList<Domino> toPlay = new ArrayList<Domino>(sizeToPlay);
+    private ArrayList<Domino> toChoose = new ArrayList<Domino>(sizeToPlay);
 
-    private ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
+    private final ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
     
     public ArrayList<ArrayList<ArrayList<Integer>>> getPossiblePlacement() {
         return possiblePlacement;
@@ -36,7 +37,7 @@ public class Game {
 // Constructor
     public Game(){
         this.deck = generateDeck();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < sizeToPlay; i++) {
             this.toPlay.add(null);
         }
         this.color = new HashMap<String,String>();
@@ -88,7 +89,7 @@ public class Game {
 
     public void getDominosFromDeck(){
         ArrayList<Domino> picked = new ArrayList<Domino>();
-        for(int i=0;i<4;i++){
+        for(int i=0;i<sizeToPlay;i++){
             int sum = this.deck.size();
             int random = new Random().nextInt(sum);
             picked.add(deck.get(random));
@@ -160,13 +161,13 @@ public class Game {
         infoField.set(0, infoField.get(0)+1);                                                   //On ajoute 1 au compteur de tuile identique
         if(tile.getCrown()!=0)                                                                  // si il y a des couronnes sur la tuile, on l'ajoute dans le total des couronnes
             infoField.set(1, infoField.get(1)+tile.getCrown());
-        if(i>0 && board.getTile(i-1,j)!=null && tile.getType() == board.getFieldType(i-1,j) && !this.tileTraveled.contains((i-1)*9+j)){ //On veut parcourir l'ensemble des tile composant le terrain à calculer
+        if(i!=0 && board.getTile(i-1,j)!=null && tile.getType() == board.getFieldType(i-1,j) && !this.tileTraveled.contains((i-1)*9+j)){ //On veut parcourir l'ensemble des tile composant le terrain à calculer
             infoField = nextTile(board, board.getTile(i-1,j), i-1,j,infoField);                            //(ici on monte avec i-1), 
         }                                                                                                        //prevMove permet d'indiquer le mouvement qu'on a fait pour éviter de calculer 2 fois une même tuile 
         if(j!=8 && board.getTile(i,j+1)!=null && tile.getType() == board.getFieldType(i,j+1) && !this.tileTraveled.contains(i*9+(j+1)) ){
             infoField = nextTile(board, board.getTile(i,j+1),i,j+1, infoField);
         }
-        if(i<9 && board.getTile(i+1,j)!=null && tile.getType() == board.getFieldType(i+1,j) && !this.tileTraveled.contains((i+1)*9+j)){
+        if(i!=8 && board.getTile(i+1,j)!=null && tile.getType() == board.getFieldType(i+1,j) && !this.tileTraveled.contains((i+1)*9+j)){
             infoField = nextTile(board, board.getTile(i+1,j), i+1,j,infoField);
         }
         if(j!=0 && board.getTile(i,j-1)!=null && tile.getType() == board.getFieldType(i,j-1) && !this.tileTraveled.contains(i*9+(j-1))){

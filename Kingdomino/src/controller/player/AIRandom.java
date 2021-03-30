@@ -20,7 +20,7 @@ public class AIRandom implements InterfacePlayer {
     }
     
     public int chooseDomino(){
-        int random = new Random().nextInt(4) + 1;
+        int random = new Random().nextInt(this.game.getToChoose().size()) + 1;
         return random;
     }
     

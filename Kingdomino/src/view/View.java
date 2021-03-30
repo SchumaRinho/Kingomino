@@ -110,6 +110,10 @@ public class View {
         System.out.println("Scores : ");
         System.out.println("Joueur 1 : " + this.game.getScore(1));
         System.out.println("Joueur 2 : " + this.game.getScore(2));
+        if(this.game.getScore(1)>this.game.getScore(2))
+            System.out.println("Victoire du Joueur 1 !");
+        else
+            System.out.println("Victoire du Joueur 2 !");
     }
     
     public void printNoPossibleChoice(){
@@ -124,6 +128,14 @@ public class View {
             System.out.println("Choisissez les coordonées de la tuile droite"); 
     } 
 
+    public static void printAiVsAi(){
+        System.out.println("Voulez-vous voire une partie ia vs ia ?    [0: Non / 1: Oui]");
+    }
+    
+    public static void printChooseAI(int player){
+        System.out.println("Choisissez l'ia du joueur " + player + " : 1- AIRandom 2- AIScore");
+    }
+    
     public static void printAiChoice(){
         System.out.println("Voulez-vous jouer contre une ia ?    [0: Non / 1: Oui]");
     }

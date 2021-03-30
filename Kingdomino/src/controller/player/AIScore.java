@@ -56,16 +56,21 @@ public class AIScore implements InterfacePlayer{
         Board currentBestBoard = new Board();
         int tmp=-1; int choix=-1;
         for(int n=0; n<this.game.getToChoose().size();n++){
-            System.out.println(n + " " + this.game.getToChoose().get(n).getPlayer());
             if(this.game.getToChoose().get(n).getPlayer()==null){
                 ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = this.game.possiblePlacement(this.game.getToChoose().get(n), nextPlateau);
-                for(int i=0; i<possiblePlacement.size();i++){
-                    Board plateauCopy = new Board(); plateauCopy.cloneFrom(nextPlateau); plateauCopy.addDomino(this.game.getToChoose().get(n), possiblePlacement.get(i));
-                    if(tmp<this.game.getScoreAI(plateauCopy)){
-                        currentBestBoard.cloneFrom(plateauCopy);        /*Bug quand il doit choisir une pièce qui ne peut pas placer*/
-                        tmp=this.game.getScoreAI(plateauCopy);
-                        choix=n;
+                if(!possiblePlacement.isEmpty()){
+                    for(int i=0; i<possiblePlacement.size();i++){
+                        Board plateauCopy = new Board(); plateauCopy.cloneFrom(nextPlateau); plateauCopy.addDomino(this.game.getToChoose().get(n), possiblePlacement.get(i));
+                        if(tmp<this.game.getScoreAI(plateauCopy)){
+                            currentBestBoard.cloneFrom(plateauCopy);        /*Bug quand il doit choisir une pièce qui ne peut pas placer*/
+                            tmp=this.game.getScoreAI(plateauCopy);
+                            choix=n;
+                        }
                     }
+                }
+                else{
+                    if(choix==-1)
+                        choix=n;
                 }
             }
         }
@@ -75,8 +80,7 @@ public class AIScore implements InterfacePlayer{
     @Override
     public ArrayList<ArrayList<Integer>> choosePlacement(ArrayList<ArrayList<ArrayList<Integer>>> placementPossible){
        ArrayList<ArrayList<ArrayList<Integer>>> coo = this.listeBestScore(this.game.getSelectedDomino(), placementPossible);
-        System.out.println(coo);
-        return coo.get(new Random().nextInt(coo.size()));
+       return coo.get(new Random().nextInt(coo.size()));
     }
 
 }

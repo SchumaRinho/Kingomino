@@ -32,6 +32,47 @@ public class Controller  {
 
         main();
     }
+    
+    private void main(){
+        // choice of AI or not
+        PlayerTerminal player = new PlayerTerminal(this.game, this.game.getBoard(1));
+        if(player.aiGame()){
+            for(int i=1;i<=2;i++){
+                if(player.choiceAiVsAi(i)==2)
+                    this.players.add(new AIScore(this.game,this.game.getBoard(i)));
+                else
+                    this.players.add(new AIRandom(this.game));
+            }
+        }
+        else{
+            this.players.add(player);
+            if(player.aiChoice()){
+                if(player.choiceAiVsAi(2)==2)
+                    this.players.add(new AIScore(this.game,this.game.getBoard(2)));
+                else
+                    this.players.add(new AIRandom(this.game));                }
+            else
+                this.players.add(new PlayerTerminal(this.game, this.game.getBoard(2)));
+        }
+        // Game playing
+        this.doFirstTurn();
+        for(int turn = 2; turn <=6; turn ++){
+            this.game.getDominosFromDeck();
+            for(Domino d : this.game.getToPlay()){
+                this.view.printGame();
+                this.view.printPlayerTurn(currentPlayer);
+                this.view.printDeck();
+                this.currentPlayer = d.getPlayer();
+
+                this.doPlacement(d);
+                
+                this.doChoice();
+
+            }
+            this.game.setToPlay(new ArrayList<Domino>(this.game.getToChoose()));
+        }
+        this.view.printScore();
+    } 
 
     private void doFirstTurn(){
         this.game.getDominosFromDeck();
@@ -46,7 +87,6 @@ public class Controller  {
         Domino domino;
 
         while(kings.size() != 0 ){
-
             this.view.printDeck();
             n = new Random().nextInt(kings.size());
             this.currentPlayer = kings.get(n);
@@ -64,7 +104,6 @@ public class Controller  {
             }
 
             domino.setPlayer(currentPlayer);
-
             this.game.getToPlay().set(choice-1,domino);
         }
     }
@@ -73,7 +112,7 @@ public class Controller  {
             int choice;
             Domino domino;
 
-            this.view.printPlayerTurn(currentPlayer);
+            //this.view.printPlayerTurn(currentPlayer);
             choice = this.players.get(currentPlayer-1).chooseDomino();
             domino = this.game.getToChoose().get(choice-1);
             while(domino.getPlayer()!=null){
@@ -88,7 +127,7 @@ public class Controller  {
     }
 
     private void doPlacement(Domino domino){
-        this.view.printPlayerTurn(currentPlayer);
+        //this.view.printPlayerTurn(currentPlayer);
         this.game.possiblePlacement(domino, game.getBoard(currentPlayer));
         if(!this.game.getPossiblePlacement().isEmpty()){
             ArrayList<ArrayList<Integer>> coo = new ArrayList<ArrayList<Integer>>();
@@ -101,33 +140,4 @@ public class Controller  {
         domino.resetPlayer();
         
     }
-    
-    // a remonté plus haut !!!
-    private void main(){
-        // choice of AI or not
-        PlayerTerminal player = new PlayerTerminal(this.game, this.game.getBoard(1));
-        this.players.add(player);
-        if(player.aiChoice())
-            this.players.add(new AIScore(this.game,this.game.getBoard(2)));
-        else
-            this.players.add(new PlayerTerminal(this.game, this.game.getBoard(2)));
-        // Game playing
-        this.doFirstTurn();
-        for(int turn = 2; turn <=12; turn ++){
-            this.game.getDominosFromDeck();
-            for(Domino d : this.game.getToPlay()){
-                this.view.printGame();
-                this.view.printDeck();
-                this.currentPlayer = d.getPlayer();
-
-                this.doPlacement(d);
-                
-                this.doChoice();
-
-            }
-            this.game.setToPlay(new ArrayList<Domino>(this.game.getToChoose()));
-        }
-        this.view.printScore();
-    } 
-    
 }
