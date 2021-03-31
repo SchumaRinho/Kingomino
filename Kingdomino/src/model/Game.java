@@ -9,8 +9,8 @@ package model;
 import java.util.*;
 import view.*;
 /**
- *
- * @author Clémentine
+ * Classe représentant le jeu.
+ * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
  */
 public class Game {
 
@@ -26,15 +26,14 @@ public class Game {
     private ArrayList<Domino> toChoose = new ArrayList<Domino>(sizeToPlay);
 
     private final ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
-    
-    public ArrayList<ArrayList<ArrayList<Integer>>> getPossiblePlacement() {
-        return possiblePlacement;
-    }
+ 
     public static HashMap<String,String> color;
 
     private ArrayList<Integer> tileTraveled = new ArrayList<>();
-
-// Constructor
+    
+    /**
+     * Constructeur Game.
+     */
     public Game(){
         this.deck = generateDeck();
         for (int i = 0; i < sizeToPlay; i++) {
@@ -49,16 +48,22 @@ public class Game {
         this.color.put("mine","\u001B[41m");
     }
 
-// Getters
-
+    /**
+     * Permet de récuperer un plateau en fonction du joueur qui joue.
+     * @param playerNumber
+     * @return plateau du joueur
+     */
     public Board getBoard(int playerNumber){
         if (playerNumber==1)
             return this.board1;
         return this.board2;
     }
 
-// public methods
-
+    /**
+     * Permet de récupèrer le score d'un plateau.
+     * @param boardNumber
+     * @return score du plateau
+     */
     public int getScore(int boardNumber){
         this.tileTraveled.clear();
         int score = 0;
@@ -75,6 +80,12 @@ public class Game {
         }
         return score;
     }
+
+    /**
+     * Permet de récupérer le score du plateau de l'ia
+     * @param aiBoard
+     * @return score du plateau de l'ia
+     */
     public int getScoreAI(Board aiBoard){
         this.tileTraveled.clear();
         int score = 0;
@@ -87,6 +98,9 @@ public class Game {
         return score;
     }
 
+    /**
+     * Permet a un joueur de selectionner un domino dans la pioche
+     */
     public void getDominosFromDeck(){
         ArrayList<Domino> picked = new ArrayList<Domino>();
         for(int i=0;i<sizeToPlay;i++){
@@ -99,6 +113,12 @@ public class Game {
         this.toChoose = picked;
     }
     
+    /**
+     * demande des coordonnées, attend une réponse de l'utilisateur. Vérifie si la réponse attendu est correcte.
+     * @param board
+     * @return 
+     * @throws InputMismatchException 
+     */
     public ArrayList validCoo(Board board) throws InputMismatchException{
         int cooX =-1;
         int cooY =-1;
@@ -129,7 +149,12 @@ public class Game {
         return new ArrayList<Integer>(Arrays.asList((Integer)cooX, (Integer)cooY));
     }
     
-        
+    /**
+     * Enregistre la liste total des placement possible pour un domino et pour un plateau
+     * @param d
+     * @param plateau
+     * @return Liste des placements possibles pour un domino
+     */
     public ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement(Domino d, Board plateau){
         this.selectedDomino=d;
         possiblePlacement.clear();
@@ -146,16 +171,30 @@ public class Game {
         return possiblePlacement;
     }
    
-
-    // private methods
-    
+    /**
+     * Permet de Calculer le score pour un type de terrain sur un plateau
+     * @param board
+     * @param tile
+     * @param i
+     * @param j
+     * @return Le combre de couronne * le nombre de Tile 
+     */
     private int scoreField(Board board, Tile tile, int i, int j){
         ArrayList<Integer> infoField = new ArrayList<>();
         infoField.add(0);infoField.add(0);
         infoField= nextTile(board,tile,i,j, infoField);  // calcul.get(0) -> nombre de tuile identique
         return infoField.get(0)*infoField.get(1);            // calcul.get(1) -> nombre de couronne sur la zonne 
     }
-
+    
+    /**
+     * Parcours récursif des Tile de même type et de récupérer les infos utiles pour le scores
+     * @param board
+     * @param tile
+     * @param i
+     * @param j
+     * @param infoField
+     * @return listes des informations pour un type de terrain : nombre de terrain et nombre de couronnes
+     */
     private ArrayList<Integer> nextTile(Board board, Tile tile, int i,int j, ArrayList<Integer> infoField){
         this.tileTraveled.add(i*9+j);
         infoField.set(0, infoField.get(0)+1);                                                   //On ajoute 1 au compteur de tuile identique
@@ -177,7 +216,10 @@ public class Game {
     }
     
 
-
+    /**
+     * Créer la liste de touts les dominos
+     * @return pioche de jeu
+     */
     private ArrayList<Domino> generateDeck(){
         generatorTile(new Tile("champs",0),new Tile("champs",0),2);
         generatorTile(new Tile("forêt",0),new Tile("forêt",0),4);
@@ -215,6 +257,12 @@ public class Game {
         return deck;
     }
 
+    /**
+     * Permet de créer un Domino 
+     * @param tileL
+     * @param tileR
+     * @param nb 
+     */
     private void generatorTile(Tile tileL, Tile tileR, int nb){
         int currentNumber = this.deck.size();
         for(int i=0;i<nb;i++){
@@ -223,6 +271,12 @@ public class Game {
         }
     }
     
+    /**
+     * Vérifie si le placement d'un domino est possible
+     * @param d
+     * @param coo
+     * @param plateau 
+     */
     private void canBePlaced(Domino d, ArrayList<Integer> coo,Board plateau){
         Board plateauCopy = new Board();
         plateau.addTile(d.getTileL(), coo);
@@ -248,18 +302,33 @@ public class Game {
         }
     }
     
+    /**
+     * Récupère la pioche du jeu
+     * @return Pioche
+     */
     public ArrayList<Domino> getDeck() {
         return deck;
     }
 
+    /**
+     * récupère la liste des dominos a joué
+     * @return les dominos a joué
+     */
     public ArrayList<Domino> getToPlay() {
         return toPlay;
     }
-
+    
+    /**
+     * récupère la liste des dominos a choisir
+     * @return les dominos a choisir
+     */
     public ArrayList<Domino> getToChoose() {
         return toChoose;
     }
 
+    /**
+     * remise à zéro de la liste des dominos a choisir
+     */
     public void resetToChoose(){
         this.toChoose = new ArrayList<Domino>(sizeToPlay);
         for (int i = 0; i < sizeToPlay; i++) {
@@ -267,12 +336,27 @@ public class Game {
         }
     }
     
+    /**
+     * Récupère un domino séléctionner par le joueur
+     * @return domino sélectionner
+     */
     public Domino getSelectedDomino() {
         return selectedDomino;
     }
     
+    /**
+     * Met a jour la liste des dominos a jouer 
+     * @param toPlay
+     */
     public void setToPlay(ArrayList<Domino> toPlay) {
         this.toPlay = toPlay;
     }
 
+    /**
+     * accésseur pour possiblePlacement 
+     * @return possiblePlacement
+     */
+    public ArrayList<ArrayList<ArrayList<Integer>>> getPossiblePlacement() {
+        return possiblePlacement;
+    }
 }

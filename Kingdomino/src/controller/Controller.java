@@ -11,8 +11,8 @@ import controller.player.*;
 import java.util.*;
 
 /**
- *
- * @author leovi
+ * Classe représentant le Controleur de notre projet.
+ * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
  */
 public class Controller  {
 
@@ -26,6 +26,11 @@ public class Controller  {
     private AIRandom aiRandom;
     private boolean ai=false;
 
+    /**
+     * Constructeur Controller.
+     * @param game
+     * @param view
+     */
     public Controller (Game game, View view){
         this.game = game;
         this.view = view;
@@ -33,6 +38,9 @@ public class Controller  {
         main();
     }
     
+    /**
+     * Méthode principal qui gère le déroulement d'une partie.
+     */
     private void main(){
         // choice of AI or not
         PlayerTerminal player = new PlayerTerminal(this.game, this.game.getBoard(1));
@@ -75,6 +83,9 @@ public class Controller  {
         this.view.printScore();
     } 
 
+    /**
+     * déroulement du dernier tour
+     */
     private void doLastTurn(){
         this.game.resetToChoose();
         for(Domino d : this.game.getToPlay()){
@@ -87,6 +98,9 @@ public class Controller  {
         }
     }
 
+    /**
+     * déroulement du premier tour
+     */
     private void doFirstTurn(){
         this.game.getDominosFromDeck();
         this.view.printGame();
@@ -121,6 +135,9 @@ public class Controller  {
         }
     }
 
+    /**
+     * déroulement d'un choix
+     */
     private void doChoice(){
             int choice;
             Domino domino;
@@ -139,6 +156,9 @@ public class Controller  {
             domino.setPlayer(currentPlayer);
     }
 
+    /**
+     * déroulement d'un placement
+    */
     private void doPlacement(Domino domino){
         //this.view.printPlayerTurn(currentPlayer);
         this.game.possiblePlacement(domino, game.getBoard(currentPlayer));

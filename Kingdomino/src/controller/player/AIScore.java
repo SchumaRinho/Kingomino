@@ -11,8 +11,8 @@ import java.util.Random;
 import model.*;
 
 /**
- *
- * @author leovi
+ * Classe Représentant L'IA Score, implémentant InterfacePlayer.
+ * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
  */
 public class AIScore implements InterfacePlayer{
     
@@ -24,12 +24,23 @@ public class AIScore implements InterfacePlayer{
     private HashMap<ArrayList<ArrayList<Integer>>,Integer> test;
     private Game game;
     
+    /**
+     * Constructeur AIScore.
+     * @param game
+     * @param plateau
+     */
     public AIScore(Game game, Board plateau){
         this.game = game;
         this.plateau = plateau;
         this.nextPlateau = plateau;
     }
     
+    /**
+     * Permet de créer une liste de placement qui donne le meilleurs score
+     * @param d
+     * @param possiblePlacement
+     * @return l'ensemble des placements qui donne le meilleurs score
+     */
     private  ArrayList<ArrayList<ArrayList<Integer>>> listeBestScore( Domino d , ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement){
         int tmp=-1;
         ArrayList<ArrayList<ArrayList<Integer>>> listeBestScore= new ArrayList<ArrayList<ArrayList<Integer>>>();        
@@ -46,13 +57,20 @@ public class AIScore implements InterfacePlayer{
         return listeBestScore;
     }
     
-    private void resetNextPlateau(Board plateau, boolean round){
-        if(round)
-            this.nextPlateau=this.plateau;
+    /**
+     * Permet de remettre a zéro le plateau une fois que le second domino est choisi
+     */
+    private void resetNextPlateau(){
+        this.nextPlateau=this.plateau;
     }
+
+    /**
+     * Permet de choisir un Domino dans la liste des dominos a choisir, de sorte que le prochain placement soit celui qui augmente au mieux le score
+     * @return
+     */
     @Override
     public int chooseDomino(){
-        resetNextPlateau(nextPlateau,round);
+        resetNextPlateau();
         Board currentBestBoard = new Board();
         int tmp=-1; int choix=-1;
         for(int n=0; n<this.game.getToChoose().size();n++){
@@ -77,6 +95,12 @@ public class AIScore implements InterfacePlayer{
         round = !round;
         return choix+1;
     }
+
+    /**
+     * Tire un placement aléatoire dans la liste de placement qui donne le meilleur score
+     * @param placementPossible
+     * @return un placement
+     */
     @Override
     public ArrayList<ArrayList<Integer>> choosePlacement(ArrayList<ArrayList<ArrayList<Integer>>> placementPossible){
        ArrayList<ArrayList<ArrayList<Integer>>> coo = this.listeBestScore(this.game.getSelectedDomino(), placementPossible);

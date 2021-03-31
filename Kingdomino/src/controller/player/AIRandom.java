@@ -9,21 +9,34 @@ import model.*;
 import java.util.*;
 import view.*;
 /**
- *
- * @author Clémentine
+ * Classe représentant l'IA Random, implémentant InterfacePlayer.
+ * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
  */
 public class AIRandom implements InterfacePlayer {
     Game game;
     
+    /**
+     * Constructeur AIRandom.
+     * @param game
+     */
     public AIRandom(Game game){
         this.game = game;
     }
     
+    /**
+     * Choix aléatoire d'un domino.
+     * @return un chiffre aléatoire
+     */
     public int chooseDomino(){
         int random = new Random().nextInt(this.game.getToChoose().size()) + 1;
         return random;
     }
     
+    /**
+     * Choix aléatoire d'un placement parmis une liste de placement
+     * @param placementPossible
+     * @return Un placement depuis une liste
+     */
     public ArrayList<ArrayList<Integer>> choosePlacement(ArrayList<ArrayList<ArrayList<Integer>>> placementPossible){
         int borneSup = placementPossible.size();
         return placementPossible.get(new Random().nextInt(borneSup));

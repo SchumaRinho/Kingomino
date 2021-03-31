@@ -9,8 +9,9 @@ import view.View;
 import controller.Controller;
 import model.*;
 /**
- *
- * @author leovi
+ * Classe Principale du Projet Kingdomino
+ * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
+
  */
 public class Kingdomino {
 
