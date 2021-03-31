@@ -56,7 +56,7 @@ public class Controller  {
         }
         // Game playing
         this.doFirstTurn();
-        for(int turn = 2; turn <=6; turn ++){
+        for(int i = 1; i < 6 ; i++){
             this.game.getDominosFromDeck();
             for(Domino d : this.game.getToPlay()){
                 this.view.printGame();
@@ -71,8 +71,21 @@ public class Controller  {
             }
             this.game.setToPlay(new ArrayList<Domino>(this.game.getToChoose()));
         }
+        this.doLastTurn();
         this.view.printScore();
     } 
+
+    private void doLastTurn(){
+        this.game.resetToChoose();
+        for(Domino d : this.game.getToPlay()){
+            this.view.printGame();
+            this.view.printPlayerTurn(currentPlayer);
+            this.view.printDeck();
+            this.currentPlayer = d.getPlayer();
+
+            this.doPlacement(d);
+        }
+    }
 
     private void doFirstTurn(){
         this.game.getDominosFromDeck();

@@ -259,6 +259,13 @@ public class Game {
     public ArrayList<Domino> getToChoose() {
         return toChoose;
     }
+
+    public void resetToChoose(){
+        this.toChoose = new ArrayList<Domino>(sizeToPlay);
+        for (int i = 0; i < sizeToPlay; i++) {
+            this.toChoose.add(null);
+        }
+    }
     
     public Domino getSelectedDomino() {
         return selectedDomino;

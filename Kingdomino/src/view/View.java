@@ -75,20 +75,22 @@ public class View {
     public void printDeck(){
         ArrayList<Domino> toPlay = this.game.getToPlay();
         ArrayList<Domino> toChoose = this.game.getToChoose();
-        if(toPlay.get(0) != null && toPlay.get(1) != null && toPlay.get(2) != null && toPlay.get(3) != null){
-            for(int i = 0;i < toPlay.size(); i++){
+
+        for(int i = 0; i < toPlay.size(); i++){
+            if(toPlay.get(0) != null && toPlay.get(1) != null && toPlay.get(2) != null && toPlay.get(3) != null){
                 printDomino(toPlay.get(i));
-                System.out.print("   ");
+                if(toChoose.get(0) != null && toChoose.get(1) != null && toChoose.get(2) != null && toChoose.get(3) != null){
+                    System.out.print("   ");
+                    printDomino(toChoose.get(i));
+                }
+                
+                System.out.println("");
+            }else{
                 printDomino(toChoose.get(i));
                 System.out.println("");
             }
         }
-        else{
-            for(Domino domino : toChoose){
-                printDomino(domino);
-                System.out.println("");
-            }
-        }
+
     }
 
     public void printDomino(Domino domino){
@@ -129,7 +131,7 @@ public class View {
     } 
 
     public static void printAiVsAi(){
-        System.out.println("Voulez-vous voire une partie ia vs ia ?    [0: Non / 1: Oui]");
+        System.out.println("Voulez-vous voir une partie ia vs ia ?    [0: Non / 1: Oui]");
     }
     
     public static void printChooseAI(int player){
