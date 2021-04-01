@@ -16,15 +16,11 @@ import java.util.*;
  */
 public class Controller  {
 
-    private Game game;
-    private View view;
+    private final Game game;
+    private final View view;
 
     private ArrayList<InterfacePlayer> players = new ArrayList<InterfacePlayer>(2);
     public Integer currentPlayer;
-    
-    private AIScore aiScore;
-    private AIRandom aiRandom;
-    private boolean ai=false;
 
     /**
      * Constructeur Controller.
@@ -113,7 +109,7 @@ public class Controller  {
         int choice; 
         Domino domino;
 
-        while(kings.size() != 0 ){
+        while(!kings.isEmpty()){
             this.view.printDeck();
             n = new Random().nextInt(kings.size());
             this.currentPlayer = kings.get(n);

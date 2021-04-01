@@ -5,18 +5,15 @@
  */
 package model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  * Classe représentant un domino, implémentant Comparable.
  * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
  */
 public class Domino implements Comparable<Domino>{
     
-    private Tile tileR;
-    private Tile tileL;
-    private int value;
+    private final Tile tileR;
+    private final Tile tileL;
+    private final int value;
     private Integer player = null;
 
     /**

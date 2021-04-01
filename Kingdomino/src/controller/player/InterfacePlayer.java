@@ -7,9 +7,7 @@
 package controller.player;
 
 
-import model.*;
 import java.util.*;
-import view.*;
 /**
  * Interface représentant tout les joueurs, que ce soit écrivant en terminal, ou IA suivant un algorithme, pour unifié les méthodes de choix
  * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre

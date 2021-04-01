@@ -6,7 +6,6 @@
 package controller.player;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 import model.*;
 
@@ -16,13 +15,10 @@ import model.*;
  */
 public class AIScore implements InterfacePlayer{
     
-    private Board plateau;
+    private final Board plateau;
     private Board nextPlateau;
-    private ArrayList<ArrayList<Integer>>  cooBestScoreDomino1;
-    private ArrayList<ArrayList<Integer>>  cooBestScoreDomino2;
     private boolean round = true;
-    private HashMap<ArrayList<ArrayList<Integer>>,Integer> test;
-    private Game game;
+    private final Game game;
     
     /**
      * Constructeur AIScore.
@@ -48,7 +44,7 @@ public class AIScore implements InterfacePlayer{
             Board plateauCopy = new Board(); plateauCopy.cloneFrom(plateau); plateauCopy.addDomino(d, possiblePlacement.get(i));
             if(tmp<this.game.getScoreAI(plateauCopy)){
                 tmp=this.game.getScoreAI(plateauCopy);
-                listeBestScore.clear();;
+                listeBestScore.clear();
                 listeBestScore.add(possiblePlacement.get(i));
             }
             else if(tmp==this.game.getScoreAI(plateauCopy))

@@ -5,7 +5,6 @@
  */
 package view;
 
-import controller.Controller;
 import model.*;
 import java.util.*;
 import static model.Game.color;
@@ -22,8 +21,7 @@ public class View {
     public static final String ANSI_WHITE = "\u001B[37m";
     public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
-    private Game game;
-    private Controller controller;
+    private final Game game;
     
     /**
      * Constructeur View.

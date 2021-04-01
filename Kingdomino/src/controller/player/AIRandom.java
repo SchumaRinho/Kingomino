@@ -7,13 +7,12 @@ package controller.player;
 
 import model.*;
 import java.util.*;
-import view.*;
 /**
  * Classe représentant l'IA Random, implémentant InterfacePlayer.
  * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
  */
 public class AIRandom implements InterfacePlayer {
-    Game game;
+    private final Game game;
     
     /**
      * Constructeur AIRandom.
@@ -27,6 +26,7 @@ public class AIRandom implements InterfacePlayer {
      * Choix aléatoire d'un domino.
      * @return un chiffre aléatoire
      */
+    @Override
     public int chooseDomino(){
         int random = new Random().nextInt(this.game.getToChoose().size()) + 1;
         return random;
@@ -37,6 +37,7 @@ public class AIRandom implements InterfacePlayer {
      * @param placementPossible
      * @return Un placement depuis une liste
      */
+    @Override
     public ArrayList<ArrayList<Integer>> choosePlacement(ArrayList<ArrayList<ArrayList<Integer>>> placementPossible){
         int borneSup = placementPossible.size();
         return placementPossible.get(new Random().nextInt(borneSup));
