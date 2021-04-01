@@ -76,6 +76,7 @@ public class Controller  {
             this.game.setToPlay(new ArrayList<Domino>(this.game.getToChoose()));
         }
         this.doLastTurn();
+        this.view.printGame();
         this.view.printScore();
     } 
 
