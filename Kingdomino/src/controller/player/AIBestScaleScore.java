@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import model.*;
 /**
- *
- * @author Pierre Besnehard, Alexandre Bellebon
+ * Classe Représentant L'IA BestScaleScore, implémentant InterfacePlayer.
+ * @author Besnehard Pierre, Bellebon Alexandre
  */
 public class AIBestScaleScore implements InterfacePlayer{
     
@@ -20,12 +20,12 @@ public class AIBestScaleScore implements InterfacePlayer{
     private Board nextPlateau2;
     private boolean round = true;
     private final Game game;
-    private int player;
-    private int opponent;
+    private final int player;
+    private final int opponent;
     
     
     /**
-     * Constructeur AIScore.
+     * Constructeur AIBestScaleScore.
      * @param game
      * @param player
      */
@@ -65,12 +65,15 @@ public class AIBestScaleScore implements InterfacePlayer{
     }
     
     /**
-     * Permet de remettre a zéro le plateau une fois que le second domino est choisi
+     * Permet de remettre a zéro le plateau de l'ia une fois que le second domino est choisi
      */
     private void resetNextPlateau1(){
         this.nextPlateau1=this.plateau1;
     }
     
+    /**
+     * Permet de remettre a zéro le plateau de l'adversaire une fois que le second domino est choisi
+     */
     private void resetNextPlateau2(){
         this.nextPlateau2=this.plateau2;
     }

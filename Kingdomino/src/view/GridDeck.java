@@ -10,13 +10,17 @@ import java.awt.GridLayout;
 import javax.swing.border.Border;
 
 /**
- *
- * @author Junior
+ * Classe, extension de JPanel, représentant une liste de pièces sur l'interface graphique.
+ * @author Pierre Besnehard, Alexandre Bellebon
  */
 public class GridDeck extends JPanel{
     private final JPanel[][] tab = new JPanel[4][3];
     private final Border border = BorderFactory.createLineBorder(Color.black,2);
     
+    /**
+     * constructeur de GridDeck.
+     * @param grid
+     */
     public GridDeck(JPanel grid){
         for (JPanel[] tab1 : tab) {
             for (int j = 0; j < tab1.length; j++) {
@@ -28,6 +32,13 @@ public class GridDeck extends JPanel{
             }
         }
     }
+
+    /**
+     * permet de récupérer une case dans la liste.
+     * @param x
+     * @param y
+     * @return une case de la liste.
+     */
     public JPanel getPanel(int x, int y){
         return this.tab[x][y];
     }

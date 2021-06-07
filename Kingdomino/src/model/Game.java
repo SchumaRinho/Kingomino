@@ -27,6 +27,9 @@ public class Game {
 
     private final ArrayList<ArrayList<ArrayList<Integer>>> possiblePlacement = new ArrayList<ArrayList<ArrayList<Integer>>>();
  
+    /**
+     * déclaration d'un Hashmap qui permettra de relier une couleur au type d'une tuile
+     */
     public static HashMap<String,String> color;
 
     private ArrayList<Integer> tileTraveled = new ArrayList<>();

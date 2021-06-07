@@ -9,21 +9,24 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.border.Border;
 /**
- *
- * @author Junior
+ * Classe, extension de JPanel, représentant une grille de jeu sur l'interface graphique.
+ * @author Pierre Besnehard, Alexandre Bellebon
  */
 public class GridPlay extends JPanel{
     private final JPanel[][] tab = new JPanel[10][10];
     private final Border border = BorderFactory.createLineBorder(Color.black,2);
     private final String p;
     
+    /**
+     * Constructeur de GridPlay.
+     * @param grid
+     * @param player
+     */
     public GridPlay(JPanel grid, String player){
         this.p = player;
         for (int i = 0; i < tab.length; i++) {
             for (int j = 0; j < tab[i].length; j++) {
                 tab[i][j] = new JPanel(new GridLayout(1, 2));
-                // on remplis le tableau avec des panel (avec un grid layout 
-                // pour pouvoir contenir un panel qui prend toute la place disponible)
                 if(i==0 && j!=0){
                     JLabel columns = new JLabel(Integer.toString(j),SwingConstants.CENTER);
                     tab[i][j].add(columns);
@@ -37,23 +40,44 @@ public class GridPlay extends JPanel{
                     tab[i][j].setBorder(border);
                 }
                 grid.add(tab[i][j]);
-                // finalement on situe le premier tableau là ou il doit etre
-                
             }
         }
     }
+
+    /**
+     * permet de récuperer une case de la grille de jeu.
+     * @param x
+     * @param y
+     * @return une case de la grille.
+     */
     public JPanel getPanel(int x, int y){
         return this.tab[x+1][y+1];
     }
     
+    /**
+     * permet de récuperer le joueur à qui appartient le plateau.
+     * @return le joueur qui possède le plateau.
+     */
     public String getPlayer(){
         return this.p;
     }
     
+    /**
+     * permet de récuperer le nom d'une case dans la grille de jeu.
+     * @param x
+     * @param y
+     * @return le nom de la case.
+     */
     public String getName(int x, int y){
         return tab[x][y].getName();
     }
     
+    /**
+     * permet de changer le nom d'une case dans la grille de jeu.
+     * @param x
+     * @param y
+     * @param name
+     */
     public void setName(int x, int y, String name){
         tab[x][y].setName(name);
     }

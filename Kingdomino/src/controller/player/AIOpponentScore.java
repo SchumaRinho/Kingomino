@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import model.*;
 /**
- *
+ * Classe Représentant L'IA OpponentScore, implémentant InterfacePlayer.
  * @author Pierre Besnehard, Alexandre Bellebon
  */
 public class AIOpponentScore implements InterfacePlayer{
@@ -19,11 +19,11 @@ public class AIOpponentScore implements InterfacePlayer{
     private Board nextPlateau;
     private boolean round = true;
     private final Game game;
-    private int player;
-    private int opponent;
+    private final int player;
+    private final int opponent;
     
     /**
-     * Constructeur AIScore.
+     * Constructeur AIOpponentScore.
      * @param game
      * @param player
      */

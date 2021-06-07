@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import model.*;
 /**
- *
- * @author Pierre
+ * Classe Représentant L'IA LowDomino, implémentant InterfacePlayer.
+ * @author Besnehard Pierre, Bellebon Alexandre
  */
 public class AILowDomino implements InterfacePlayer{
     
@@ -18,7 +18,7 @@ public class AILowDomino implements InterfacePlayer{
     private final Game game;
     
     /**
-     * Constructeur AIScore.
+     * Constructeur AILowDomino.
      * @param game
      * @param plateau
      */
@@ -50,7 +50,7 @@ public class AILowDomino implements InterfacePlayer{
     }
 
     /**
-     * Permet de choisir le domino ayant la plus faible valeur brute
+     * Permet de choisir le domino étant au plus haut de la liste, c'est a dire celui avec la valeur la plus faible.
      * @return
      */
     @Override

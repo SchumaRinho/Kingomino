@@ -13,13 +13,12 @@ import javax.swing.border.Border;
 import java.awt.*;
 
 /**
- * Classe représentant la Vue de notre projet.
+ * Classe, extension de JFrame, représentant la Vue de notre projet.
  * @author Vincent Léo, Leroy Clémentine, Besnehard Pierre, Bellebon Alexandre
  */
 public class View extends JFrame{
     private final JFrame window = new JFrame("Kingdomino, Interface Graphique");
     private final Border border = BorderFactory.createLineBorder(Color.BLACK,2);
-    private final Border noBorder = BorderFactory.createLineBorder(Color.WHITE,0);
     private final Border p1Border = BorderFactory.createLineBorder(Color.BLUE,2);
     private final Border p2Border = BorderFactory.createLineBorder(Color.RED,2);
     private final JPanel gridP1 = new JPanel(new GridLayout(10,10));
@@ -39,7 +38,9 @@ public class View extends JFrame{
     boolean victory = false;
     Random rand = new Random();
     
-    
+    /**
+     * déclaration de plusieurs String afin de pouvoir changer la couleur de certaine piece dans la grille lorsqu'on joue en vue terminale
+     */
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -59,26 +60,30 @@ public class View extends JFrame{
         this.view = view;
     }
 
+    /**
+     * permet de changer la valeur de la vue. false si vue terminal, true si vue graphique.
+     * @param i
+     */
     public void setView(boolean i){
         this.view = i;
     }
     
+    /**
+     * permet de récuperer la valeur de la vue. false si vue terminal, true si vue graphique.
+     * @return
+     */
     public boolean getView(){
         return this.view;
     }
     
-    public void printWindowView(){
-        buildContentPane();
-        graphicView();
-        paintGrid(game.getBoard(1), tab1);
-        paintGrid(game.getBoard(2), tab2);
-        window.setVisible(true);
-    }
-    
+    /**
+     * permet de construire la fenetre de jeu.
+     */
     public void graphicView(){
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setSize(1280,650);
         
+        buildContentPane();
         window.add(gridP1);
         window.add(gridP2);
         window.add(p1);
@@ -92,6 +97,10 @@ public class View extends JFrame{
         window.add(tmpPanel);
     }
     
+    /**
+     * permet de mettre à jour la fenetre de jeu, lorsqu'un évenement ou un changement survient dans le jeu.
+     * @param currentPlayer
+     */
     public void update(int currentPlayer){
         updateGridPlay();
         updateGridDeck();
@@ -99,11 +108,17 @@ public class View extends JFrame{
         updatePlayerTurn(currentPlayer);
     }
     
+    /**
+     * permet de mettre à jour les grilles de jeu des joueurs.
+     */
     public void updateGridPlay(){
         paintGrid(game.getBoard(1), tab1);
         paintGrid(game.getBoard(2), tab2);
     }
     
+    /**
+     * permet de mettre à jour les listes de pièces qu'il faut choisir ou piocher.
+     */
     public void updateGridDeck(){
         for(int i = 0; i<4; i++){
             for(int j = 0; j<3; j++){
@@ -115,6 +130,9 @@ public class View extends JFrame{
         paintDecks(this.game.getToChoose(), tileInDeck);
     }
     
+    /**
+     * permet de mettre à jour le score des joueurs et d'afficher le gagnant.
+     */
     public void updateScore(){
         scoreP1.setText("Score J1 : "+this.game.getScore(1));
         scoreP2.setText("Score J2 : "+this.game.getScore(2));
@@ -129,6 +147,10 @@ public class View extends JFrame{
         }
     }
     
+    /**
+     * permet de mettre à jour la couleur des joueurs en fonction de leurs tour.
+     * @param currentPlayer
+     */
     public void updatePlayerTurn(int currentPlayer){
         if(currentPlayer==1){
             p1.setBackground(Color.decode("#505DE2"));
@@ -144,6 +166,9 @@ public class View extends JFrame{
         p2.updateUI();
     }
     
+    /**
+     * permet de créer et de parametrer les différents éléments de la fenetre : leurs placements, leurs tailles etc...
+     */
     public void buildContentPane(){
         JLabel player1 = new JLabel("Joueur 1");
         player1.setFont(new Font("Serif", Font.BOLD, 30));
@@ -193,10 +218,15 @@ public class View extends JFrame{
         tilesToPlay.setVisible(false);
         scoreP1.setBounds(1010,315,220,90);
         scoreP2.setBounds(1010,410,220,90);
-        //scoreP1.setVisible(false);
-        //scoreP2.setVisible(false);
+        scoreP1.setVisible(false);
+        scoreP2.setVisible(false);
     }
     
+    /**
+     * permet de paindre une liste de domino en fonction de ce que la partie décide.
+     * @param deck
+     * @param grid
+     */
     private void paintDecks(ArrayList<Domino> deck, GridDeck grid){
         for(int i = 0; i < deck.size(); i++){
             for(int j=0; j < deck.size()-1; j++){
@@ -229,6 +259,11 @@ public class View extends JFrame{
         }
     }
     
+    /**
+     * permet de paindre la grille d'un joueur avec les dominos que le joueur place.
+     * @param board
+     * @param grid
+     */
     private void paintGrid(Board board, GridPlay grid){
         for(int i = 0; i<9; i++){
             for(int j = 0; j<9; j++){
@@ -256,6 +291,11 @@ public class View extends JFrame{
         }
     }
     
+    /**
+     * permet d'afficher le joueur gagnant de la partie avec un effet clignotant.
+     * @param score
+     * @param mainColor
+     */
     private void paintVictory(JLabel score, Color mainColor){
         while(true){
             if(!victory){
@@ -275,6 +315,12 @@ public class View extends JFrame{
         }
     }
     
+    /**
+     * permet de récuperer un String pour importer la bonne image en fonction du type et du nombre de couronnes du domino
+     * @param imageKey
+     * @param crownCount
+     * @return un String qui est le nom de l'image qui sera sélectioner
+     */
     private String chooseImage(String imageKey, int crownCount){
         if(crownCount != 0 ){
             imageKey+="-"+crownCount;
@@ -289,6 +335,9 @@ public class View extends JFrame{
         return imageKey;
     }
     
+    /**
+     * permet de faire une pause de 1 sec au jeu
+     */
     public void viewWait(){
         try {
             Thread.sleep(1000);
@@ -296,10 +345,24 @@ public class View extends JFrame{
         }
     }
     
+    /**
+     * permet d'afficher la fenetre de jeu.
+     */
+    public void printWindowView(){
+        graphicView();
+        window.setVisible(true);
+    }
+    
+    /**
+     * permet d'afficher la liste des pieces à jouer sur la fenetre de jeu
+     */
     public void printDeckView(){
         tilesToPlay.setVisible(true);
     }
     
+    /**
+     * permet de désafficher la liste des pièces a piocher
+     */
     public void unprintDeckView(){
         tilesToDraw.setVisible(false);
         tilesToPlay.setBounds(1010,50,220,260);
@@ -307,6 +370,9 @@ public class View extends JFrame{
         tilesToPlay.updateUI();
     }
     
+    /**
+     * permet d'afficher les scores sur la fenetre de jeu
+     */
     public void printScoreView(){
         scoreP1.setVisible(true);
         scoreP2.setVisible(true);
@@ -460,6 +526,13 @@ public class View extends JFrame{
     public static void printAiChoice(){
         System.out.println("Voulez-vous jouer contre une ia ?    [0: Non / 1: Oui]");
     }
+    
+    /**
+     * permet d'afficher la demande de jouer avec une fenetre de jeu
+     */
+    public static void printViewChoice(){
+        System.out.println("Voulez-vous jouer avec une fenetre pour observer la partie ?    [0: Non / 1: Oui]");
+    }
 
     /**
      * permet d'afficher la demande de choix de domino
@@ -489,9 +562,5 @@ public class View extends JFrame{
      */
     public static void printFailed(){
         System.out.println("Vous devez saisir sous le format y,x !");
-    }
-    
-    public static void printViewChoice(){
-        System.out.println("Voulez-vous jouer avec une fenetre pour observer la partie ?    [0: Non / 1: Oui]");
     }
 }

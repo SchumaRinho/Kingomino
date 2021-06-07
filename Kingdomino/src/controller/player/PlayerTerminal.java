@@ -117,6 +117,10 @@ public class PlayerTerminal implements InterfacePlayer {
         return (this.boundaryChoice(0,1)==1);
     }
      
+    /**
+     * Permet de recevoir la réponse du joueur, si il souhaite avoir une fenetre de jeu.
+     * @return
+     */
     public boolean viewChoice(){
         View.printViewChoice();
         return (this.boundaryChoice(0,1)==1);

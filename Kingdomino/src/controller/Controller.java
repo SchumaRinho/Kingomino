@@ -243,6 +243,9 @@ public class Controller  {
         
     }
     
+    /**
+     * vérifie si le joueur souhaite observer une partie IA vs IA, si oui fait une pause au jeu d'une seconde.
+    */
     private void aiVsAi(){
         if(aiVsAi){
             this.view.viewWait();

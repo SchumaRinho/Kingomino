@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import model.*;
 /**
- *
- * @author Pierre Besnehard, Alexandre Bellebon
+ * Classe Représentant L'IA HighDomino, implémentant InterfacePlayer.
+ * @author Besnehard Pierre, Bellebon Alexandre
  */
 public class AIHighDomino implements InterfacePlayer{
     
@@ -18,7 +18,7 @@ public class AIHighDomino implements InterfacePlayer{
     private final Game game;
     
     /**
-     * Constructeur AIScore.
+     * Constructeur AIHighDomino.
      * @param game
      * @param plateau
      */
@@ -50,7 +50,7 @@ public class AIHighDomino implements InterfacePlayer{
     }
 
     /**
-     * Permet de choisir le domino ayant la plus grande valeur brute
+     * Permet de choisir le domino étant au plus bas de la liste, c'est a dire celui avec la valeur la plus haute.
      * @return
      */
     @Override
