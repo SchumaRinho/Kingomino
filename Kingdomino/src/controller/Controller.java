@@ -104,8 +104,10 @@ public class Controller  {
         this.doFirstTurn();
         for(int i = 1; i < 6 ; i++){
             this.game.getDominosFromDeck();
-            this.view.update(currentPlayer);
-            this.view.printDeckView();
+            if(this.view.getView()){
+                this.view.update(currentPlayer);
+                this.view.printDeckView();
+            }
             for(Domino d : this.game.getToPlay()){
                 this.currentPlayer = d.getPlayer();
                 if(!this.view.getView()){ //  /.!.\ [Il y a plein de if de ce genre, ils permettent d'afficher le jeu en mode console uniquement, si il y a une fenetre graphique, alors les seuls choses indiquer seront le tour du joueur, et les questions posé par la console ]
@@ -113,12 +115,14 @@ public class Controller  {
                     this.view.printDeck();
                 }else{
                     this.view.update(currentPlayer);
-                    aiVsAi();
                 }
+                aiVsAi();
                 this.view.printPlayerTurn(currentPlayer);
                 
                 this.doPlacement(d);
-                this.view.update(currentPlayer);
+                if(this.view.getView()){
+                    this.view.update(currentPlayer);
+                }
                 aiVsAi();
                 this.doChoice();
 
@@ -149,10 +153,9 @@ public class Controller  {
                 this.view.printDeck();
             }else{
                 this.view.update(currentPlayer);
-                aiVsAi();
             }
+            aiVsAi();
             this.view.printPlayerTurn(currentPlayer);
-
             this.doPlacement(d);
         }
     }
@@ -182,11 +185,9 @@ public class Controller  {
             if(!this.view.getView()){
                 this.view.printDeck();
             }else{
-                
                 this.view.update(currentPlayer);
-                aiVsAi();
             }
-            
+            aiVsAi();
             this.view.printPlayerTurn(currentPlayer);
             choice = this.players.get(currentPlayer-1).chooseDomino();
             domino = this.game.getToChoose().get(choice-1);
