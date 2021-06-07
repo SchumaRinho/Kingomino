@@ -44,19 +44,54 @@ public class Controller  {
         if(player.aiGame()){
             aiVsAi = true;
             for(int i=1;i<=2;i++){
-                if(player.choiceAiVsAi(i)==2)
-                    this.players.add(new AIScore(this.game,this.game.getBoard(i)));
-                else
-                    this.players.add(new AIRandom(this.game));
+                int j = player.choiceAiVsAi(i);
+                switch (j) {
+                    case 2:
+                        this.players.add(new AIScore(this.game,this.game.getBoard(i)));
+                        break;
+                    case 3:
+                        this.players.add(new AIOpponentScore(this.game,i));
+                        break;
+                    case 4:
+                        this.players.add(new AIHighDomino(this.game,this.game.getBoard(i)));
+                        break;
+                    case 5:
+                        this.players.add(new AILowDomino(this.game,this.game.getBoard(i)));
+                        break;
+                    case 6:
+                        this.players.add(new AIBestScaleScore(this.game,i));
+                        break;
+                    default:
+                        this.players.add(new AIRandom(this.game));
+                        break;
+                }
             }
         }
         else{
             this.players.add(player);
             if(player.aiChoice()){
-                if(player.choiceAiVsAi(2)==2)
-                    this.players.add(new AIScore(this.game,this.game.getBoard(2)));
-                else
-                    this.players.add(new AIRandom(this.game));                }
+                int j = player.choiceAiVsAi(2);
+                switch (j) {
+                    case 2:
+                        this.players.add(new AIScore(this.game,this.game.getBoard(2)));
+                        break;
+                    case 3:
+                        this.players.add(new AIOpponentScore(this.game,2));
+                        break;
+                    case 4:
+                        this.players.add(new AIHighDomino(this.game,this.game.getBoard(2)));
+                        break;
+                    case 5:
+                        this.players.add(new AILowDomino(this.game,this.game.getBoard(2)));
+                        break;
+                    case 6:
+                        this.players.add(new AIBestScaleScore(this.game,2));
+                        break;
+                    default:
+                        this.players.add(new AIRandom(this.game));
+                        break;
+                }
+            }
             else
                 this.players.add(new PlayerTerminal(this.game, this.game.getBoard(2)));
         }

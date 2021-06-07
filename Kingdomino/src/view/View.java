@@ -451,7 +451,7 @@ public class View extends JFrame{
      * @param player
      */
     public static void printChooseAI(int player){
-        System.out.println("Choisissez l'ia du joueur " + player + " : 1- AIRandom 2- AIScore");
+        System.out.println("Choisissez l'ia du joueur " + player + " : 1- AIRandom 2- AIScore 3-AIOpponentScore 4-AIHighDomino 5-AILowDomino 6-AIBestScaleScore");
     }
     
     /**

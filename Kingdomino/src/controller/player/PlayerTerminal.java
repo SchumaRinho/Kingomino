@@ -105,7 +105,7 @@ public class PlayerTerminal implements InterfacePlayer {
      */
     public int choiceAiVsAi(int player){
         View.printChooseAI(player);
-        return (this.boundaryChoice(1,2));
+        return (this.boundaryChoice(1,6));
     }
     
     /**
