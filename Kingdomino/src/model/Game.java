@@ -46,6 +46,7 @@ public class Game {
         this.color.put("champs","\u001B[43m");
         this.color.put("forêt","\u001B[45m");
         this.color.put("mine","\u001B[41m");
+        
     }
 
     /**
@@ -54,6 +55,7 @@ public class Game {
      * @return plateau du joueur
      */
     public Board getBoard(int playerNumber){
+        //board1.testBoard1();
         if (playerNumber==1)
             return this.board1;
         return this.board2;

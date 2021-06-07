@@ -5,7 +5,7 @@
  */
 package kingdomino;
 
-import view.View;
+import view.*;
 import controller.Controller;
 import model.*;
 /**
@@ -20,7 +20,7 @@ public class Kingdomino {
      */
     public static void main(String[] args) {
         Game game = new Game();
-        View view = new View(game);
+        View view = new View(game,false);
         Controller controller = new Controller(game,view);
     }   
 }

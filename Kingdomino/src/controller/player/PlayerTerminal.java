@@ -117,4 +117,8 @@ public class PlayerTerminal implements InterfacePlayer {
         return (this.boundaryChoice(0,1)==1);
     }
      
+    public boolean viewChoice(){
+        View.printViewChoice();
+        return (this.boundaryChoice(0,1)==1);
+    }
 }

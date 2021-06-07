@@ -5,7 +5,7 @@
  */
 package controller;
 
-import view.View;
+import view.*;
 import model.*;
 import controller.player.*;
 import java.util.*;
@@ -18,6 +18,7 @@ public class Controller  {
 
     private final Game game;
     private final View view;
+    private Boolean aiVsAi = false;
 
     private ArrayList<InterfacePlayer> players = new ArrayList<InterfacePlayer>(2);
     public Integer currentPlayer;
@@ -41,6 +42,7 @@ public class Controller  {
         // choice of AI or not
         PlayerTerminal player = new PlayerTerminal(this.game, this.game.getBoard(1));
         if(player.aiGame()){
+            aiVsAi = true;
             for(int i=1;i<=2;i++){
                 if(player.choiceAiVsAi(i)==2)
                     this.players.add(new AIScore(this.game,this.game.getBoard(i)));
@@ -58,26 +60,45 @@ public class Controller  {
             else
                 this.players.add(new PlayerTerminal(this.game, this.game.getBoard(2)));
         }
+        // choice of GraphicView or not
+        if(player.viewChoice()){
+            this.view.setView(true);
+            this.view.printWindowView();
+        }
         // Game playing
         this.doFirstTurn();
         for(int i = 1; i < 6 ; i++){
             this.game.getDominosFromDeck();
+            this.view.update(currentPlayer);
+            this.view.printDeckView();
             for(Domino d : this.game.getToPlay()){
-                this.view.printGame();
-                this.view.printPlayerTurn(currentPlayer);
-                this.view.printDeck();
                 this.currentPlayer = d.getPlayer();
-
-                this.doPlacement(d);
+                if(!this.view.getView()){ //  /.!.\ [Il y a plein de if de ce genre, ils permettent d'afficher le jeu en mode console uniquement, si il y a une fenetre graphique, alors les seuls choses indiquer seront le tour du joueur, et les questions posé par la console ]
+                    this.view.printGame();
+                    this.view.printDeck();
+                }else{
+                    this.view.update(currentPlayer);
+                    aiVsAi();
+                }
+                this.view.printPlayerTurn(currentPlayer);
                 
+                this.doPlacement(d);
+                this.view.update(currentPlayer);
+                aiVsAi();
                 this.doChoice();
 
             }
             this.game.setToPlay(new ArrayList<Domino>(this.game.getToChoose()));
         }
         this.doLastTurn();
-        this.view.printGame();
-        this.view.printScore();
+        if(!this.view.getView()){
+            this.view.printGame();
+            this.view.printScore();
+        }else{
+            this.view.update(0);
+            this.view.printScoreView();
+        }
+        
     } 
 
     /**
@@ -85,11 +106,17 @@ public class Controller  {
      */
     private void doLastTurn(){
         this.game.resetToChoose();
+        this.view.unprintDeckView();
         for(Domino d : this.game.getToPlay()){
-            this.view.printGame();
-            this.view.printPlayerTurn(currentPlayer);
-            this.view.printDeck();
             this.currentPlayer = d.getPlayer();
+            if(!this.view.getView()){
+                this.view.printGame();
+                this.view.printDeck();
+            }else{
+                this.view.update(currentPlayer);
+                aiVsAi();
+            }
+            this.view.printPlayerTurn(currentPlayer);
 
             this.doPlacement(d);
         }
@@ -100,7 +127,9 @@ public class Controller  {
      */
     private void doFirstTurn(){
         this.game.getDominosFromDeck();
-        this.view.printGame();
+        if(!this.view.getView()){
+            this.view.printGame();
+        }
 
             // Initialisation de variables permettant de l'aléatoire pour le premier tour.  
         ArrayList<Integer> kings = new ArrayList<Integer>();
@@ -111,11 +140,18 @@ public class Controller  {
         Domino domino;
 
         while(!kings.isEmpty()){
-            this.view.printDeck();
             n = new Random().nextInt(kings.size());
             this.currentPlayer = kings.get(n);
             kings.remove(n);
-
+            
+            if(!this.view.getView()){
+                this.view.printDeck();
+            }else{
+                
+                this.view.update(currentPlayer);
+                aiVsAi();
+            }
+            
             this.view.printPlayerTurn(currentPlayer);
             choice = this.players.get(currentPlayer-1).chooseDomino();
             domino = this.game.getToChoose().get(choice-1);
@@ -169,5 +205,11 @@ public class Controller  {
         }
         domino.resetPlayer();
         
+    }
+    
+    private void aiVsAi(){
+        if(aiVsAi){
+            this.view.viewWait();
+        }
     }
 }
